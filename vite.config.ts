@@ -9,6 +9,12 @@ export default defineConfig({
       "@": resolve(__dirname, "src"),
       "@components": resolve(__dirname, "src/components"),
       "@assets": resolve(__dirname, "src/assets"),
+      "@api": resolve(__dirname, "src/api"),
+      "@store": resolve(__dirname, "src/store"),
+      "@pages": resolve(__dirname, "src/pages"),
+      "@utils": resolve(__dirname, "src/utils"),
+      "@hooks": resolve(__dirname, "src/hooks"),
+      "@types": resolve(__dirname, "src/types"),
     },
   },
 });
