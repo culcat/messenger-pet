@@ -10,6 +10,7 @@ import Settings from "@assets/Settings.svg?react";
 import Star from "@assets/Star.svg?react";
 import UserMultiple from "@assets/User--multiple.svg?react";
 import styles from "./SideBar.module.scss";
+import Chats from "../Chats/Chats";
 
 const { Sider } = Layout;
 
@@ -39,44 +40,55 @@ const SideBar: React.FC = () => {
     { key: "folders", icon: <Folders width={widhtIcon} height={heightIcon} /> },
   ];
 
+  const renderContent = () => {
+    switch (selectedKey) {
+      case "chats":
+        return <Chats />;
+      case "contacts":
+        return <div>Contacts Component</div>;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Sider
-      className={styles.sider}
-      theme="light"
-      collapsed={false}
-      style={{ height: "100vh" }}
-    >
-      <div className={styles.menuBlock}>
-        <Menu
-          mode="inline"
-          selectedKeys={[selectedKey]}
-          onClick={(e) => setSelectedKey(e.key)}
-          className={styles.menu}
-          items={topMenu.map((item) => ({
-            key: item.key,
-            icon: item.icon,
-            disabled: item.disabled,
-            label: "",
-          }))}
-        />
+    <Layout style={{ height: "100vh" }}>
+      <Sider className={styles.sider} theme="light" collapsed={false}>
+        <div className={styles.menuBlock}>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            onClick={(e) => setSelectedKey(e.key)}
+            className={styles.menu}
+            items={topMenu.map((item) => ({
+              key: item.key,
+              icon: item.icon,
+              disabled: item.disabled,
+              label: "",
+            }))}
+          />
 
-        <div className={styles.divider} />
+          <div className={styles.divider} />
 
-        <Menu
-          mode="inline"
-          selectedKeys={[selectedKey]}
-          onClick={(e) => setSelectedKey(e.key)}
-          className={styles.menu}
-          items={bottomMenu.map((item) => ({
-            key: item.key,
-            icon: item.icon,
-            label: "",
-          }))}
-        />
-      </div>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            onClick={(e) => setSelectedKey(e.key)}
+            className={styles.menu}
+            items={bottomMenu.map((item) => ({
+              key: item.key,
+              icon: item.icon,
+              label: "",
+            }))}
+          />
+        </div>
 
-      <div className={styles.avatar}>S</div>
-    </Sider>
+        <div className={styles.avatar}>S</div>
+      </Sider>
+      <Layout>
+        <div className={styles.content}>{renderContent()}</div>
+      </Layout>
+    </Layout>
   );
 };
 

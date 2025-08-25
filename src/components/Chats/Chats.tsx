@@ -72,7 +72,7 @@ const chats: ChatItem[] = [
 const Chats: React.FC = () => {
   return (
     <div className={styles.wrapper}>
-      <SideBar />
+      {/* <SideBar /> */}
 
       <div className={styles.chats}>
         <Title level={4} className={styles.title}>

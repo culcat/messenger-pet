@@ -4,7 +4,7 @@ import SideBar from "@/components/SideBar/SideBar";
 export const Messages = () => {
   return (
     <>
-      <Chats />
+      <SideBar />
     </>
   );
 };
