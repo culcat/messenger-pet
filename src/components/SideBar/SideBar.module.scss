@@ -21,7 +21,7 @@
 }
 
 .menu {
-  width: max-content !important;
+  width: auto !important;
   border-inline-end: none !important;
   background: transparent !important;
   display: flex;
@@ -33,7 +33,7 @@
     display: flex !important;
     justify-content: center;
     padding: 12px 0 !important;
-    margin: 0 !important;
+    margin: 10 !important;
     width: auto !important;
     height: auto !important;
   }

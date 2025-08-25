@@ -22,23 +22,68 @@ const SideBar: React.FC = () => {
   const topMenu = [
     {
       key: "logo",
-      icon: <Logo width={widhtIcon} height={heightIcon} />,
+      icon: (
+        <Logo
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
       disabled: true,
     },
-    { key: "chats", icon: <ChatBot width={widhtIcon} height={heightIcon} /> },
+    {
+      key: "chats",
+      icon: (
+        <ChatBot
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
+    },
     {
       key: "contacts",
-      icon: <UserMultiple width={widhtIcon} height={heightIcon} />,
+      icon: (
+        <UserMultiple
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
     },
   ];
 
   const bottomMenu = [
     {
       key: "settings",
-      icon: <Settings width={widhtIcon} height={heightIcon} />,
+      icon: (
+        <Settings
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
     },
-    { key: "stars", icon: <Star width={widhtIcon} height={heightIcon} /> },
-    { key: "folders", icon: <Folders width={widhtIcon} height={heightIcon} /> },
+    {
+      key: "stars",
+      icon: (
+        <Star
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
+    },
+    {
+      key: "folders",
+      icon: (
+        <Folders
+          style={{ marginLeft: "10px" }}
+          width={widhtIcon}
+          height={heightIcon}
+        />
+      ),
+    },
   ];
 
   const renderContent = () => {
@@ -65,7 +110,6 @@ const SideBar: React.FC = () => {
               key: item.key,
               icon: item.icon,
               disabled: item.disabled,
-              label: "",
             }))}
           />
 
@@ -79,12 +123,9 @@ const SideBar: React.FC = () => {
             items={bottomMenu.map((item) => ({
               key: item.key,
               icon: item.icon,
-              label: "",
             }))}
           />
         </div>
-
-        <div className={styles.avatar}>S</div>
       </Sider>
       <Layout>
         <div className={styles.content}>{renderContent()}</div>
