@@ -11,6 +11,7 @@ import Star from "@assets/Star.svg?react";
 import UserMultiple from "@assets/User--multiple.svg?react";
 import styles from "./SideBar.module.scss";
 import Chats from "../Chats/Chats";
+import { Contacts } from "../Contacts";
 
 const { Sider } = Layout;
 
@@ -45,7 +46,7 @@ const SideBar: React.FC = () => {
       case "chats":
         return <Chats />;
       case "contacts":
-        return <div>Contacts Component</div>;
+        return <Contacts />;
       default:
         return null;
     }
