@@ -1,3 +1,10 @@
+import Chats from "@/components/Chats/Chats";
+import SideBar from "@/components/SideBar/SideBar";
+
 export const Messages = () => {
-  return <div>Messages</div>;
+  return (
+    <>
+      <Chats />
+    </>
+  );
 };

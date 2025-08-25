@@ -44,7 +44,6 @@ export const LoginForm = () => {
       </Form.Item>
       <Form.Item>
         <Checkbox>Remember me for 30 days</Checkbox>{" "}
-        <Link to="/">Forgot password?</Link>
       </Form.Item>
       <Form.Item>
         <Button
