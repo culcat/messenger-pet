@@ -11,14 +11,6 @@ interface ChatDetailProps {
   id: number | null;
 }
 
-const tabItems = [
-  { key: "overview", label: "Overview" },
-  { key: "media", label: "Media" },
-  { key: "links", label: "Links" },
-  { key: "files", label: "Files" },
-  { key: "groups", label: "Groups" },
-];
-
 const ContactDetail = ({ id }: ChatDetailProps) => {
   const contacts = useSelector((state: RootState) => state.contacts);
   const contact = contacts.find((c) => c.id === id);

@@ -50,6 +50,31 @@ export const initialState: ChatItem[] = [
         sender: "Ethan Smith",
         time: new Date("2025-08-26T15:04:00.000Z"),
       },
+      {
+        message: "Paul - Come around...",
+        sender: "Ethan Smith",
+        time: new Date("2025-08-27T15:04:00.000Z"),
+      },
+      {
+        message: "Paul - Come around...",
+        sender: "Ethan Smith",
+        time: new Date("2025-08-28T15:04:00.000Z"),
+      },
+      {
+        message: "Paul - Come around...",
+        sender: "Ethan Smith",
+        time: new Date("2025-08-29T15:04:00.000Z"),
+      },
+      {
+        message: "Paul - Come around...",
+        sender: "Ethan Smith",
+        time: new Date("2025-08-30T15:04:00.000Z"),
+      },
+      {
+        message: "Paul - Come around...",
+        sender: "Ethan Smith",
+        time: new Date("2025-08-31T15:04:00.000Z"),
+      },
     ],
   },
   {

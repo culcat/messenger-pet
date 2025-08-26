@@ -6,12 +6,13 @@ import ChatBot from "@assets/Chat-bot.svg?react";
 import Folders from "@assets/Folders.svg?react";
 import Phone from "@assets/Phone.svg?react";
 import Search from "@assets/Search.svg?react";
-import Settings from "@assets/Settings.svg?react";
+import Setting from "@assets/Settings.svg?react";
 import Star from "@assets/Star.svg?react";
 import UserMultiple from "@assets/User--multiple.svg?react";
 import styles from "./SideBar.module.scss";
 import Chats from "../Chats/Chats";
 import { Contacts } from "../Contacts";
+import Settings from "@components/Settings/Settings";
 
 const { Sider } = Layout;
 
@@ -57,7 +58,7 @@ const SideBar: React.FC = () => {
     {
       key: "settings",
       icon: (
-        <Settings
+        <Setting
           style={{ marginLeft: "10px" }}
           width={widhtIcon}
           height={heightIcon}
@@ -92,6 +93,8 @@ const SideBar: React.FC = () => {
         return <Chats />;
       case "contacts":
         return <Contacts />;
+      case "settings":
+        return <Settings />;
       default:
         return null;
     }

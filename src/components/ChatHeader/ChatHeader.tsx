@@ -37,7 +37,11 @@ export const ChatHeader = (chat: ChatHeaderProps) => {
         </Flex>
         <Flex align="center" gap="middle">
           <Space size="middle">
-            <Button color="default" variant="solid">
+            <Button
+              style={{ border: "none", borderRadius: "20px" }}
+              color="default"
+              variant="solid"
+            >
               View profile
             </Button>
           </Space>
