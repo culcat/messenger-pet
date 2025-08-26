@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface ContactItem {
-  id: number;
-  name: string;
-  number: string;
-  status?: string;
-  avatar?: string;
-  email?: string;
-}
+import { ContactItem } from "@/types/contact";
 
 const initialState: ContactItem[] = [
   {

@@ -6,8 +6,7 @@ import Logo from "@assets/Logo.svg?react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import styles from "./ContactDetail.module.scss";
-import React from "react";
-
+import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
 interface ChatDetailProps {
   id: number | null;
 }
@@ -28,15 +27,7 @@ const ContactDetail = ({ id }: ChatDetailProps) => {
     <Layout className={styles.detailLayout}>
       <Content>
         {id === null || !contact ? (
-          <div className={styles.emptyState}>
-            <Logo style={{ margin: 20 }} />
-            <Title style={{ margin: 20 }} level={2}>
-              Messenger
-            </Title>
-            <Paragraph>
-              Your personal messages are end-to-end encrypted.
-            </Paragraph>
-          </div>
+          <MessengerAbout />
         ) : (
           <div className={styles.contactInfo}>
             <div className={styles.header}>

@@ -1,10 +1,12 @@
 import React from "react";
-import { Input, Typography, Divider, List, Avatar } from "antd";
+import { Input, Typography, Divider, List, Avatar, Flex } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./Chats.module.scss";
 import ChatDetail from "../ChatDetail/ChatDetail";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { DateSend } from "../DateSend";
+import Paragraph from "antd/es/typography/Paragraph";
 
 const { Title, Text } = Typography;
 
@@ -55,13 +57,14 @@ const Chats: React.FC = () => {
                 <List.Item.Meta
                   avatar={<Avatar>{item.name[0]}</Avatar>}
                   title={item.name}
-                  description={item.message}
-                />
+                  description={item.messages[item.messages.length - 1].message}
+                />{" "}
               </List.Item>
             )}
           />
         </div>
       </div>
+
       <ChatDetail id={selectedId} />
     </div>
   );

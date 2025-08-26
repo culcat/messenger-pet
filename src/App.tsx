@@ -5,8 +5,6 @@ import { Route, Routes } from "react-router";
 import { Login } from "@/pages/login/Login";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <div>
