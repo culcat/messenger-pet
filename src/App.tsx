@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Messages } from "@/pages/messages/Messages";
 import "@/styles/global.scss";
 import { Route, Routes } from "react-router";

@@ -8,6 +8,7 @@ export const LoginForm = () => {
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    window.location.href = "/";
   };
 
   const onFinishFailed = (errorInfo: any) => {

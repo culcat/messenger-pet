@@ -20,7 +20,14 @@ interface ChatItem {
 
 const Chats: React.FC = () => {
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
+  const [searchText, setSearchText] = React.useState("");
   const chats = useSelector((state: RootState) => state.chats);
+
+  const filteredChats = chats.filter((chat) => {
+    const chatName = chat.name.toLowerCase();
+    const searchTextInput = searchText.toLowerCase();
+    return chatName.includes(searchTextInput);
+  });
 
   return (
     <div className={styles.wrapper}>
@@ -34,6 +41,8 @@ const Chats: React.FC = () => {
             placeholder="Search here..."
             prefix={<SearchOutlined />}
             allowClear
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
           <PlusOutlined className={styles.addIcon} />
         </div>
@@ -46,7 +55,7 @@ const Chats: React.FC = () => {
           </div>
           <List
             itemLayout="horizontal"
-            dataSource={chats}
+            dataSource={filteredChats}
             renderItem={(item) => (
               <List.Item
                 className={`${styles.chatItem} ${

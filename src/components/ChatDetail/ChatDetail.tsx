@@ -17,6 +17,7 @@ import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
 import { DateSend } from "@/components/DateSend/DateSend";
 import { ChatHeader } from "../ChatHeader";
 import ActionButton from "@assets/_Action button.svg?react";
+import { useEffect, useRef } from "react";
 
 interface ChatDetailProps {
   id: number | null;
@@ -27,6 +28,13 @@ const ChatDetail = (id: ChatDetailProps) => {
 
   const chat = chats.find((c) => c.id === id.id);
 
+  const scrollToRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollToRef.current) {
+      scrollToRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chat?.messages]);
   return (
     <>
       <Layout style={{ borderLeft: "1px solid #ccc", overflowY: "auto" }}>
@@ -113,25 +121,26 @@ const ChatDetail = (id: ChatDetailProps) => {
                   </List.Item>
                 )}
               />
+              <div ref={scrollToRef}></div>
             </Layout>
+
+            <Space.Compact
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "sticky",
+                bottom: 0,
+                padding: "16px 24px",
+                background: "#fff",
+              }}
+            >
+              <Input placeholder="Type here..." />
+              <Button variant="text" icon={<ActionButton />} />
+            </Space.Compact>
           </div>
         )}
-
-        <Space.Compact
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "sticky",
-            bottom: 0,
-            padding: "16px 24px",
-            background: "#fff",
-          }}
-        >
-          <Input placeholder="Type here..." />
-          <Button variant="text" icon={<ActionButton />} />
-        </Space.Compact>
       </Layout>
     </>
   );
