@@ -1,22 +1,17 @@
 import React from "react";
-import { Input, Typography, Divider, List, Avatar, Flex } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Input, Typography, Divider, List, Avatar, Button } from "antd";
+import { PlusOutlined, SearchOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import styles from "./Chats.module.scss";
 import ChatDetail from "../ChatDetail/ChatDetail";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { DateSend } from "../DateSend";
 import Paragraph from "antd/es/typography/Paragraph";
+
+ 
 
 const { Title, Text } = Typography;
 
-interface ChatItem {
-  id: number;
-  name: string;
-  message: string;
-  avatar?: string;
-  group?: boolean;
-}
+ 
 
 const Chats: React.FC = () => {
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
@@ -32,9 +27,12 @@ const Chats: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.chats}>
-        <Title level={4} className={styles.title}>
-          Chats
-        </Title>
+        <div className={styles.headerRow}>
+          <Title level={4} className={styles.title}>
+            Chats
+          </Title>
+      
+        </div>
 
         <div className={styles.search}>
           <Input
@@ -67,7 +65,26 @@ const Chats: React.FC = () => {
                   avatar={<Avatar>{item.name[0]}</Avatar>}
                   title={item.name}
                   description={item.messages[item.messages.length - 1].message}
-                />{" "}
+                />
+                {item.folder && (
+                  <Paragraph
+                    style={{
+                      display: "inline-block",
+                      background: "#f0f5ff",
+                      color: "#3a7afe",
+                      borderRadius: "12px",
+                      padding: "2px 12px",
+                      fontSize: "12px",
+                      marginTop: "4px",
+                      marginBottom: "0",
+                      fontWeight: 500,
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {item.folder}
+                  </Paragraph>
+                )}
+                
               </List.Item>
             )}
           />

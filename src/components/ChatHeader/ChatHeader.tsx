@@ -3,7 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import Title from "antd/es/typography/Title";
 import React from "react";
 import { ChatItem } from "@/types/chat";
-
+import { ProfileView } from "../ProfileView";
 interface ChatHeaderProps {
   chat: ChatItem;
 }
@@ -41,6 +41,7 @@ export const ChatHeader = (chat: ChatHeaderProps) => {
               style={{ border: "none", borderRadius: "20px" }}
               color="default"
               variant="solid"
+           
             >
               View profile
             </Button>

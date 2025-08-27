@@ -10,6 +10,12 @@
   overflow-y: auto;
 }
 
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .title {
   margin-bottom: 16px;
 }
@@ -53,3 +59,4 @@
 .active {
   background: #e6f7ff !important;
 }
+
