@@ -2,15 +2,23 @@ import { Button, Checkbox, Input, Select, Switch } from "antd";
 import Title from "antd/es/typography/Title";
 import styles from './Tabs.module.scss'
 import Paragraph from "antd/es/typography/Paragraph";
+import React, { useState } from "react";
 
 export const GeneralTab: React.FC = () => {
+    const [pushEnabled,setPushEnabled] = useState(Boolean)
     return (
       <div className={styles.infoBlock}>
         <Title level={5} style={{ margin: 0 }}>General</Title>
         <div>
           <b>Login</b>
           <div>
-            <Switch defaultChecked /> <span style={{ marginLeft: 8 }}>On</span>
+          <Switch
+              style={{ backgroundColor: pushEnabled ? '#121F24':'lightgrey' }}
+              checked={pushEnabled}
+            
+              onChange={setPushEnabled}
+            />
+            <span style={{ marginLeft: 8 }}>On</span>
           </div>
         </div>
         <div>
@@ -72,6 +80,7 @@ export const GeneralTab: React.FC = () => {
 
 
     export const NotificationTab: React.FC = () => {
+    const [pushEnabled, setPushEnabled] = useState<boolean>(true);
     return (
       <div className={styles.infoBlock}>
         <Title level={5} style={{ margin: 0 }}>General</Title>
@@ -79,10 +88,15 @@ export const GeneralTab: React.FC = () => {
         <div>
           <b>Communication</b>
           <div>
-            <Switch defaultChecked /> <span style={{ marginLeft: 8 }}>Push</span>
+            <Switch
+              style={{ backgroundColor: pushEnabled ? '#121F24':'lightgrey' }}
+              checked={pushEnabled}
+            
+              onChange={setPushEnabled}
+            />
+            <span style={{ marginLeft: 8 }}>Push</span>
           </div>
         </div>
-    
       </div>
     );
 }
