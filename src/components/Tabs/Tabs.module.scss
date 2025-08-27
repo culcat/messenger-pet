@@ -1,3 +1,10 @@
+.ant-switch-checked {
+    background-color: red;
+ }
+ .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red;
+    border-color: red;
+  }
 .infoBlock {
     display: flex;
     flex-direction: column;
@@ -24,6 +31,3 @@
     }
   }
 
-  .ant-switch-checked {
-    background-color: red;
- }

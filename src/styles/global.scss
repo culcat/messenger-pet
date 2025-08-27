@@ -14,3 +14,16 @@
   padding: 0;
   box-sizing: border-box;
 }
+.ant-checkbox-checked .ant-checkbox-inner  {
+  background-color: var(--text-title); /* фон внутри */
+  border-color: var(--text-title);     /* бордер */
+}
+.ant-checkbox-wrapper:hover .ant-checkbox-inner {
+  border-color: var(--text-title) !important;     /* бордер */
+  background-color: var(--text-title) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: #fff; /* цвет самой галочки */
+}
+

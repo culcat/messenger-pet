@@ -34,7 +34,7 @@ export const GeneralTab: React.FC = () => {
         <div>
           <b>Password</b>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <Checkbox defaultChecked>Photo</Checkbox>
+            <Checkbox  defaultChecked>Photo</Checkbox>
             <Checkbox defaultChecked>Audio</Checkbox>
             <Checkbox defaultChecked>Video</Checkbox>
             <Checkbox>Document</Checkbox>
