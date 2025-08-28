@@ -1,16 +1,16 @@
-import { Button, Checkbox, Form, Input } from "antd";
-import { useState } from "react";
+import { Button, Checkbox, Form, FormProps, Input } from "antd";
 import { Link } from "react-router";
 
 import { Login } from "@/types/login";
-export const LoginForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const onFinish: FormProps<Login>['onFinish'] = (values) => {
+  console.log('Success:', values);
+};
 
-  const onFinish = (values: Login) => {
-    console.log("Success:", values);
-    window.location.href = "/";
-  };
+const onFinishFailed: FormProps<Login>['onFinishFailed'] = (errorInfo) => {
+  console.log('Failed:', errorInfo);
+};
+export const LoginForm = () => {
+
 
 
   return (
@@ -18,6 +18,7 @@ export const LoginForm = () => {
       name="basic"
       initialValues={{ remember: true }}
       onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
       autoComplete="off"
       layout="vertical"
       variant="filled"
@@ -27,7 +28,7 @@ export const LoginForm = () => {
         name="Email"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
-        <Input value={username} onChange={(e) => setUsername(e.target.value)} />
+        <Input  />
       </Form.Item>
 
       <Form.Item
@@ -36,8 +37,7 @@ export const LoginForm = () => {
         rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+        
         />
       </Form.Item>
       <Form.Item>
