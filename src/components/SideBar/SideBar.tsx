@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { Layout, Menu } from "antd";
-import Logo from "@assets/Logo.svg?react";
 import Archive from "@assets/Archive.svg?react";
 import ChatBot from "@assets/Chat-bot.svg?react";
+import Logo from "@assets/Logo.svg?react";
 import Phone from "@assets/Phone.svg?react";
 import Search from "@assets/Search.svg?react";
 import Setting from "@assets/Settings.svg?react";
 import Star from "@assets/Star.svg?react";
 import UserMultiple from "@assets/User--multiple.svg?react";
-import styles from "./SideBar.module.scss";
+import Settings from "@components/Settings/Settings";
+import { Layout, Menu } from "antd";
+import React, { useState } from "react";
+
 import Chats from "../Chats/Chats";
 import { Contacts } from "../Contacts";
-import Settings from "@components/Settings/Settings";
+import styles from "./SideBar.module.scss";
 
 const { Sider } = Layout;
 

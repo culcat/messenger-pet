@@ -1,16 +1,14 @@
-import { Layout } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { Input, Typography, Divider, List, Avatar } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import styles from "./Contacts.module.scss";
-import React from "react";
+import { Avatar,Divider, Input, List,  } from "antd";
 import Title from "antd/es/typography/Title";
-import Text from "antd/es/typography/Text";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import { RootState } from "../../store";
 import ContactDetail from "../ContactDetail/ContactDetail";
+import styles from "./Contacts.module.scss";
 export const Contacts = () => {
-  const [selectedId, setSelectedId] = React.useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const contacts = useSelector((state: RootState) => state.contacts);
   return (
     <div className={styles.wrapper}>

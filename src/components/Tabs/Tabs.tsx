@@ -1,8 +1,9 @@
 import { Button, Checkbox, Input, Select, Switch } from "antd";
-import Title from "antd/es/typography/Title";
-import styles from './Tabs.module.scss'
 import Paragraph from "antd/es/typography/Paragraph";
+import Title from "antd/es/typography/Title";
 import React, { useState } from "react";
+
+import styles from './Tabs.module.scss'
 
 export const GeneralTab: React.FC = () => {
     const [pushEnabled,setPushEnabled] = useState(Boolean)

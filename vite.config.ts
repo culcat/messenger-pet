@@ -2,7 +2,15 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
+
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/global.scss" as *;`
+      }
+    }
+  },
   plugins: [react(), svgr()],
   resolve: {
     alias: {
@@ -15,7 +23,7 @@ export default defineConfig({
       "@utils": resolve(__dirname, "src/utils"),
       "@hooks": resolve(__dirname, "src/hooks"),
       "@types": resolve(__dirname, "src/types"),
-
+      "@styles": resolve(__dirname, "src/styles"),
     },
   },
 });

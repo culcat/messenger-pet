@@ -1,13 +1,14 @@
-import { Button, Checkbox, Divider, Layout, Select, Switch } from "antd";
-import styles from "./Settings.module.scss";
-import React from "react";
-import { Content } from "antd/es/layout/layout";
-import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/typography/Paragraph";
 import Logout from "@assets/Icon trailing.svg?react";
+import { Button, Checkbox, Divider, Layout, Select, Switch } from "antd";
 import { Tabs } from "antd";
 import { TabsProps } from "antd";
+import { Content } from "antd/es/layout/layout";
+import Paragraph from "antd/es/typography/Paragraph";
+import Title from "antd/es/typography/Title";
+import React from "react";
+
 import * as Tab from "../Tabs";
+import styles from "./Settings.module.scss";
 
 
 const items: TabsProps["items"] = [

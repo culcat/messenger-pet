@@ -1,17 +1,18 @@
-import React from 'react'
-import styles from './Folders.module.scss'
-import { Input, Typography, Divider, List, Avatar, Button } from 'antd';
-import { PlusOutlined, SearchOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import Paragraph from 'antd/es/typography/Paragraph';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import FolderIcon from '@assets/Folders.svg?react'
+import { Avatar, Button, List, Typography } from 'antd';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const { Title, Text } = Typography;
+import { RootState } from '../../store';
+import { FolderDetail } from '../FolderDetail';
+import styles from './Folders.module.scss'
+
+const {  Text } = Typography;
 
 export const Folders = () => {
- const [selectedId, setSelectedId] = React.useState<number | null>(null);
- const [isCollapsed, setCollapsed] = React.useState(true);
+ const [selectedName, setSelectedName] = useState<string | null>(null);
+ const [isCollapsed, setCollapsed] = useState(true);
   const toggleCollapse = () => {
     setCollapsed(!isCollapsed);
   }
@@ -35,9 +36,9 @@ export const Folders = () => {
             renderItem={(item) => (
               <List.Item
                 className={`${styles.chatItem} ${
-                  selectedId === item.id ? styles.active : ""
+                  selectedName === item.name ? styles.active : ""
                 }`}
-                onClick={() => setSelectedId(item.id)}
+                onClick={() => setSelectedName(item.name)}
               >
                 <List.Item.Meta
                   avatar={<Avatar><FolderIcon/></Avatar>}
@@ -48,6 +49,7 @@ export const Folders = () => {
               </List.Item>
             )}
           />}
+          <FolderDetail FolderName={selectedName} />
         </div>
       
 

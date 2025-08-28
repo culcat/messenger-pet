@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import FolderType from "@/types/folder";
+
 import { initialState } from "@/data/folderData";
+import FolderType from "@/types/folder";
 
 const folderSlice = createSlice({
   name: "folder",

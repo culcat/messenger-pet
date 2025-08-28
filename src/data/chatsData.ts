@@ -76,7 +76,7 @@ export const initialState: ChatItem[] = [
         time: new Date("2025-08-31T15:04:00.000Z"),
       },
     ],
-    folder: "Favourites ",
+    folder: "Favourite",
   },
   {
     id: 2,
@@ -113,7 +113,7 @@ export const initialState: ChatItem[] = [
         time: new Date("2022-11-01T15:12:00.000Z"),
       },
     ],
-    folder: "Favourites",
+    folder: "Favourite",
   },
   {
     id: 3,
@@ -130,6 +130,7 @@ export const initialState: ChatItem[] = [
         time: new Date("2022-11-01T15:14:00.000Z"),
       },
     ],
+    folder: "Friends",
   },
   {
     id: 4,

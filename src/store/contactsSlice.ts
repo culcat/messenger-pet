@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { ContactItem } from "@/types/contact";
 
 const initialState: ContactItem[] = [

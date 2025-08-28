@@ -1,26 +1,23 @@
-import { useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
+import { useState } from "react";
 import { Link } from "react-router";
 
+import { Login } from "@/types/login";
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: Login) => {
     console.log("Success:", values);
     window.location.href = "/";
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
 
   return (
     <Form
       name="basic"
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
       layout="vertical"
       variant="filled"

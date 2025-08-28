@@ -1,7 +1,9 @@
+import { FC } from "react";
+
 interface ProfileProps{
     Profile:string
 }
 
-export const ProfileView = ( Profile:ProfileProps) => {
+export const ProfileView: FC<ProfileProps> = ( Profile) => {
     return <>{Profile.Profile}</>;
 }

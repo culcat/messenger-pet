@@ -1,22 +1,23 @@
-import React from "react";
-import { Input, Typography, Divider, List, Avatar, Button } from "antd";
-import { PlusOutlined, SearchOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import styles from "./Chats.module.scss";
-import ChatDetail from "../ChatDetail/ChatDetail";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { MenuFoldOutlined, MenuUnfoldOutlined,PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Avatar, Button,Divider, Input, List, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
+import { FC, useState } from "react";
+import { useSelector } from "react-redux";
+
+import { RootState } from "../../store";
+import ChatDetail from "../ChatDetail/ChatDetail";
 import { Folders } from "../Folders/Folders";
+import styles from "./Chats.module.scss";
  
 
 const { Title, Text } = Typography;
 
  
 
-const Chats: React.FC = () => {
-  const [selectedId, setSelectedId] = React.useState<number | null>(null);
-  const [searchText, setSearchText] = React.useState("");
-  const [isCollapsed, setCollapsed] = React.useState(true);
+const Chats: FC = () => {
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [searchText, setSearchText] = useState("");
+  const [isCollapsed, setCollapsed] = useState(true);
 
   const toggleCollapse = () => {
     setCollapsed(!isCollapsed);
@@ -64,7 +65,7 @@ const Chats: React.FC = () => {
           className={styles.collapseButton}
         />
           </div>
-          {isCollapsed &&
+          {isCollapsed && 
           <List
             itemLayout="horizontal"
             dataSource={filteredChats}

@@ -1,6 +1,7 @@
-import styles from "./LoginTittle.module.scss";
-import Logo from "../../assets/Logo.svg?react";
 import { Typography } from "antd";
+
+import Logo from "../../assets/Logo.svg?react";
+import styles from "./LoginTittle.module.scss";
 
 const { Title, Text } = Typography;
 

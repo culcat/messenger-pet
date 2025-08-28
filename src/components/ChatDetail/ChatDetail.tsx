@@ -1,29 +1,29 @@
+import ActionButton from "@assets/_Action button.svg?react";
 import {
   Avatar,
   Button,
-  Divider,
   Flex,
   Input,
   Layout,
   List,
   Space,
 } from "antd";
-import { Content } from "antd/es/layout/layout";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
+import { FC, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
+
 import { DateSend } from "@/components/DateSend/DateSend";
+import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
+
+import { RootState } from "../../store";
 import { ChatHeader } from "../ChatHeader";
-import ActionButton from "@assets/_Action button.svg?react";
-import { useEffect, useRef } from "react";
 
 interface ChatDetailProps {
   id: number | null;
 }
 
-const ChatDetail = (id: ChatDetailProps) => {
+const ChatDetail: FC<ChatDetailProps> = (id) => {
   const chats = useSelector((state: RootState) => state.chats);
 
   const chat = chats.find((c) => c.id === id.id);
