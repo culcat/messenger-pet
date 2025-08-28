@@ -1,0 +1,23 @@
+.headerWrapper {
+  border-bottom: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #fff;
+}
+
+.chatTitle {
+  margin: 0;
+}
+
+.profileButton {
+  border: none !important;
+  border-radius: 20px !important;
+}

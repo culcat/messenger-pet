@@ -1,5 +1,5 @@
 import Logout from "@assets/Icon trailing.svg?react";
-import { Button, Checkbox, Divider, Layout, Select, Switch } from "antd";
+import { Button, Divider } from "antd";
 import { Tabs } from "antd";
 import { TabsProps } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -33,7 +33,7 @@ const items: TabsProps["items"] = [
 const Settings = () => {
 
   return (
-    <Layout className={styles.detailLayout}>
+    <div className={styles.detailLayout}>
       <Content>
         <div className={styles.contactInfo}>
           <div className={styles.header}>
@@ -60,7 +60,7 @@ const Settings = () => {
           <Tabs items={items} className={styles.tabs} />
         </div>
       </Content>
-    </Layout>
+    </div>
   );
 };
 

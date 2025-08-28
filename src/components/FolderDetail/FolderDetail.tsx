@@ -1,4 +1,4 @@
-import { Avatar, Layout, List } from 'antd'
+import { Avatar, List } from 'antd'
 import Paragraph from 'antd/es/typography/Paragraph'
 import { FC, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -19,7 +19,6 @@ export const FolderDetail: FC<Props> = (FolderName) => {
   
   return (
     <>
-    <Layout>
            <List
             itemLayout="horizontal"
             dataSource={filtredChats}
@@ -43,7 +42,6 @@ export const FolderDetail: FC<Props> = (FolderName) => {
               </List.Item>
             )}
           />
-    </Layout>
 
     </>
   )
