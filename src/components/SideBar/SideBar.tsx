@@ -90,7 +90,7 @@ const SideBar: React.FC = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider className={styles.sider} theme="light" collapsed={false}>
+      <Sider className={styles.sider}  collapsed={false}>
         <div className={styles.menuBlock}>
           <Menu
             mode="inline"
