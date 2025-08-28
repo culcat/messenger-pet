@@ -76,7 +76,7 @@ export const initialState: ChatItem[] = [
         time: new Date("2025-08-31T15:04:00.000Z"),
       },
     ],
-    folder: "Favourites",
+    folder: "Favourites ",
   },
   {
     id: 2,

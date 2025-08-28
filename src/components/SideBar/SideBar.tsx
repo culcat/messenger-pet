@@ -3,7 +3,6 @@ import { Layout, Menu } from "antd";
 import Logo from "@assets/Logo.svg?react";
 import Archive from "@assets/Archive.svg?react";
 import ChatBot from "@assets/Chat-bot.svg?react";
-import Folders from "@assets/Folders.svg?react";
 import Phone from "@assets/Phone.svg?react";
 import Search from "@assets/Search.svg?react";
 import Setting from "@assets/Settings.svg?react";
@@ -75,16 +74,7 @@ const SideBar: React.FC = () => {
         />
       ),
     },
-    {
-      key: "folders",
-      icon: (
-        <Folders
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
-    },
+
   ];
 
   const renderContent = () => {

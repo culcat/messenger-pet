@@ -6,7 +6,7 @@ import ChatDetail from "../ChatDetail/ChatDetail";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Paragraph from "antd/es/typography/Paragraph";
-
+import { Folders } from "../Folders/Folders";
  
 
 const { Title, Text } = Typography;
@@ -16,6 +16,12 @@ const { Title, Text } = Typography;
 const Chats: React.FC = () => {
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
   const [searchText, setSearchText] = React.useState("");
+  const [isCollapsed, setCollapsed] = React.useState(true);
+
+  const toggleCollapse = () => {
+    setCollapsed(!isCollapsed);
+  }
+
   const chats = useSelector((state: RootState) => state.chats);
 
   const filteredChats = chats.filter((chat) => {
@@ -46,11 +52,19 @@ const Chats: React.FC = () => {
         </div>
 
         <Divider />
-
         <div className={styles.section}>
+              <Folders/>
+
           <div className={styles.sectionHeader}>
             <Text strong>Chat</Text>
+             <Button 
+          type="text" 
+          icon={isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} 
+          onClick={toggleCollapse}
+          className={styles.collapseButton}
+        />
           </div>
+          {isCollapsed &&
           <List
             itemLayout="horizontal"
             dataSource={filteredChats}
@@ -87,7 +101,7 @@ const Chats: React.FC = () => {
                 
               </List.Item>
             )}
-          />
+          />}
         </div>
       </div>
 

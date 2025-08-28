@@ -1,0 +1,62 @@
+.wrapper {
+  display: flex;
+  height: 100vh;
+  background: #fff;
+}
+
+.chats {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin-bottom: 16px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  .ant-input {
+    flex: 1;
+  }
+
+  .addIcon {
+    font-size: 18px;
+    cursor: pointer;
+  }
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chatItem {
+  cursor: pointer;
+  border-radius: 8px;
+
+  &:hover {
+    background: #fafafa;
+  }
+}
+
+.active {
+  background: #e6f7ff !important;
+}
+

@@ -32,7 +32,7 @@ const ChatDetail = (id: ChatDetailProps) => {
 
   useEffect(() => {
     if (scrollToRef.current) {
-      scrollToRef.current.scrollIntoView({ behavior: "smooth" });
+      scrollToRef.current.scrollIntoView({  });
     }
   }, [chat?.messages]);
   return (
