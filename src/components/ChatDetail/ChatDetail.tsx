@@ -1,16 +1,16 @@
-import ActionButton from "@assets/_Action button.svg?react";
-import { Avatar, Button, Flex, Input, List, Space } from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
-import Title from "antd/es/typography/Title";
-import { FC, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import ActionButton from '@assets/_Action button.svg?react';
+import { Avatar, Button, Flex, Input, List, Space } from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
+import Title from 'antd/es/typography/Title';
+import { FC, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 
-import { DateSend } from "@/components/DateSend/DateSend";
-import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
+import { DateSend } from '@/components/DateSend/DateSend';
+import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
 
-import { RootState } from "../../store";
-import { ChatHeader } from "../ChatHeader";
-import styles from "./ChatDetail.module.scss";
+import { RootState } from '../../store';
+import { ChatHeader } from '../ChatHeader';
+import styles from './ChatDetail.module.scss';
 
 interface ChatDetailProps {
   id: number | null;
@@ -40,40 +40,29 @@ const ChatDetail: FC<ChatDetailProps> = ({ id }) => {
               dataSource={chat.messages}
               renderItem={(item) => (
                 <List.Item className={styles.listItem}>
-                  {item.sender === "You" ? (
-                    <Flex
-                      gap="middle"
-                      justify="flex-end"
-                      align="flex-start"
-                      className={styles.messageRight}
-                    >
+                  {item.sender === 'You' ? (
+                    <Flex gap="middle" justify="flex-end" align="flex-start" className={styles.messageRight}>
                       <Flex vertical>
-                        <Flex gap="middle">
+                        <Flex align="baseline" gap="middle">
                           <Title level={5}>{item.sender}</Title>
                           <Paragraph>
                             <DateSend dateSend={item.time} />
                           </Paragraph>
                         </Flex>
-                        <Paragraph className={styles.messageBubbleYou}>
-                          {item.message}
-                        </Paragraph>
+                        <Paragraph className={styles.messageBubbleYou}>{item.message}</Paragraph>
                       </Flex>
                     </Flex>
                   ) : (
-                    <Flex gap="middle" className={styles.messageLeft}>
-                      <Avatar className={styles.avatar}>
-                        {item.sender[0]}
-                      </Avatar>
+                    <Flex align="baseline" gap="middle" className={styles.messageLeft}>
+                      <Avatar className={styles.avatar}>{item.sender[0]}</Avatar>
                       <Flex vertical>
-                        <Flex gap="middle">
+                        <Flex align="baseline" gap="middle">
                           <Title level={5}>{item.sender}</Title>
                           <Paragraph>
                             <DateSend dateSend={item.time} />
                           </Paragraph>
                         </Flex>
-                        <Paragraph className={styles.messageBubbleOther}>
-                          {item.message}
-                        </Paragraph>
+                        <Paragraph className={styles.messageBubbleOther}>{item.message}</Paragraph>
                       </Flex>
                     </Flex>
                   )}
