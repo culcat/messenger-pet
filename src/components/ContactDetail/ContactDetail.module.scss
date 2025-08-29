@@ -114,17 +114,7 @@
     border: none;
 
     &:hover {
-      background: #2c6bbf;
-    }
-  }
-
-  &.secondary {
-    background: var(--background);
-    color: #333;
-    border: 1px solid #d1d9e1;
-
-    &:hover {
-      background: #e6ebf1;
+      background: var(-blue-light);
     }
   }
 }

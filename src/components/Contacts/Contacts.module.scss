@@ -1,8 +1,8 @@
 .wrapper {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: auto;
-  background: #fff;
+  background: var(--shape);
 }
 
 .contacts {
@@ -47,10 +47,10 @@
   border-radius: 8px;
 
   &:hover {
-    background: #fafafa;
+    background: var(--background);
   }
 }
 
 .active {
-  background: #e6f7ff !important;
+  background: var(--background);
 }
