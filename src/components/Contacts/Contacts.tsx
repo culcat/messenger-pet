@@ -1,14 +1,17 @@
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Avatar,Divider, Input, List,  } from "antd";
-import Title from "antd/es/typography/Title";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Avatar, Divider, Input, List } from 'antd';
+import Title from 'antd/es/typography/Title';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
 
-import { RootState } from "../../store";
-import ContactDetail from "../ContactDetail/ContactDetail";
-import styles from "./Contacts.module.scss";
+import { RootState } from '../../store';
+import ContactDetail from '../ContactDetail/ContactDetail';
+import styles from './Contacts.module.scss';
 export const Contacts = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  // const isMobile = useMediaQuery({ maxWidth: 600 });
+
   const contacts = useSelector((state: RootState) => state.contacts);
   return (
     <div className={styles.wrapper}>
@@ -18,11 +21,7 @@ export const Contacts = () => {
         </Title>
 
         <div className={styles.search}>
-          <Input
-            placeholder="Search here..."
-            prefix={<SearchOutlined />}
-            allowClear
-          />
+          <Input placeholder="Search here..." prefix={<SearchOutlined />} allowClear />
           <PlusOutlined className={styles.addIcon} />
         </div>
 
@@ -34,22 +33,16 @@ export const Contacts = () => {
             dataSource={contacts}
             renderItem={(item) => (
               <List.Item
-                className={`${styles.contactsItem} ${
-                  selectedId === item.id ? styles.active : ""
-                }`}
+                className={`${styles.contactsItem} ${selectedId === item.id ? styles.active : ''}`}
                 onClick={() => setSelectedId(item.id)}
               >
-                <List.Item.Meta
-                  avatar={<Avatar>{item.name[0]}</Avatar>}
-                  title={item.name}
-                  description={item.number}
-                />
+                <List.Item.Meta avatar={<Avatar>{item.name[0]}</Avatar>} title={item.name} description={item.number} />
               </List.Item>
             )}
           />
         </div>
+        <ContactDetail id={selectedId} />
       </div>
-      <ContactDetail id={selectedId} />
     </div>
   );
 };
