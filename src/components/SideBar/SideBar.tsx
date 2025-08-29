@@ -1,87 +1,56 @@
-import ChatBot from "@assets/Chat-bot.svg?react";
-import Logo from "@assets/Logo.svg?react";
-import Setting from "@assets/Settings.svg?react";
-import Star from "@assets/Star.svg?react";
-import UserMultiple from "@assets/User--multiple.svg?react";
-import Settings from "@components/Settings/Settings";
-import { Layout, Menu } from "antd";
-import React, { useState } from "react";
+import ChatBot from '@assets/Chat-bot.svg?react';
+import Logo from '@assets/Logo.svg?react';
+import Setting from '@assets/Settings.svg?react';
+import Star from '@assets/Star.svg?react';
+import UserMultiple from '@assets/User--multiple.svg?react';
+import Settings from '@components/Settings/Settings';
+import { Layout, Menu } from 'antd';
+import React, { useState } from 'react';
 
-import Chats from "../Chats/Chats";
-import { Contacts } from "../Contacts";
-import styles from "./SideBar.module.scss";
+import Chats from '../Chats/Chats';
+import { Contacts } from '../Contacts';
+import styles from './SideBar.module.scss';
 
 const { Sider } = Layout;
 
 const SideBar: React.FC = () => {
-  const [selectedKey, setSelectedKey] = useState("chats");
+  const [selectedKey, setSelectedKey] = useState('chats');
   const widhtIcon = 26;
   const heightIcon = 30;
   const topMenu = [
     {
-      key: "logo",
-      icon: (
-        <Logo
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
+      key: 'logo',
+      icon: <Logo style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
       disabled: true,
     },
     {
-      key: "chats",
-      icon: (
-        <ChatBot
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
+      key: 'chats',
+      icon: <ChatBot style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
     },
     {
-      key: "contacts",
-      icon: (
-        <UserMultiple
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
+      key: 'contacts',
+      icon: <UserMultiple style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
     },
   ];
 
   const bottomMenu = [
     {
-      key: "settings",
-      icon: (
-        <Setting
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
+      key: 'settings',
+      icon: <Setting style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
     },
     {
-      key: "stars",
-      icon: (
-        <Star
-          style={{ marginLeft: "10px" }}
-          width={widhtIcon}
-          height={heightIcon}
-        />
-      ),
+      key: 'stars',
+      icon: <Star style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
     },
-
   ];
 
   const renderContent = () => {
     switch (selectedKey) {
-      case "chats":
+      case 'chats':
         return <Chats />;
-      case "contacts":
+      case 'contacts':
         return <Contacts />;
-      case "settings":
+      case 'settings':
         return <Settings />;
       default:
         return null;
@@ -89,8 +58,8 @@ const SideBar: React.FC = () => {
   };
 
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Sider className={styles.sider}  collapsed={false}>
+    <Layout style={{ height: '100%' }}>
+      <Sider className={styles.sider} collapsed={false}>
         <div className={styles.menuBlock}>
           <Menu
             mode="inline"

@@ -7,8 +7,8 @@
   flex-direction: column;
   justify-content: space-between;
 
-  border-right: 1px solid #e6e6e6;
-  background: #fff;
+  border-right: 1px solid var(--shape);
+  background: var(--background);
   padding: 12px 0;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .menu {
-  width: auto !important;
+  width: auto;
   border-inline-end: none !important;
   background: transparent !important;
   display: flex;
@@ -39,7 +39,12 @@
   }
 
   :global(.ant-menu-item-selected) {
-    background: Surface/Accent/surface-3 !important;
+    background: var(--blue-light) !important;
+    height: auto !important;
+    border-radius: 8px;
+  }
+  :global(.ant-menu-item:hover) {
+    background: var(--blue-light) !important;
     height: auto !important;
     border-radius: 8px;
   }
