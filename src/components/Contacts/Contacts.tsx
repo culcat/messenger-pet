@@ -10,7 +10,7 @@ import ContactDetail from '../ContactDetail/ContactDetail';
 import styles from './Contacts.module.scss';
 export const Contacts = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  // const isMobile = useMediaQuery({ maxWidth: 600 });
+  const isMobile = useMediaQuery({ maxWidth: 600 });
 
   const contacts = useSelector((state: RootState) => state.contacts);
   return (
@@ -41,8 +41,8 @@ export const Contacts = () => {
             )}
           />
         </div>
-        <ContactDetail id={selectedId} />
       </div>
+      {!isMobile ? <ContactDetail id={selectedId} /> : <></>}
     </div>
   );
 };

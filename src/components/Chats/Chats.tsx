@@ -86,7 +86,7 @@ const Chats: FC = () => {
           )}
         </div>
       </div>
-      {!isMobile && selectedId && <ChatDetail id={selectedId} />}
+      {!isMobile ? <ChatDetail id={selectedId} /> : <></>}
     </div>
   );
 };

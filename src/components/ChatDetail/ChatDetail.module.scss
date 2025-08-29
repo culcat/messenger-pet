@@ -1,7 +1,7 @@
 .chatLayout {
   border-left: 1px solid var(--background);
   overflow-y: auto;
-  width: 70%;
+  width: 100%;
   max-width: 100%;
 }
 
@@ -52,6 +52,6 @@
   align-items: center;
   position: sticky;
   bottom: 0;
-  // padding: 16px 24px;
+  padding: 16px 24px;
   background: var(--shape);
 }

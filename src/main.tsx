@@ -1,4 +1,4 @@
-import './styles/index.scss';
+// import './styles/index.scss';
 
 import { ConfigProvider, Flex, Spin } from 'antd';
 import { lazy, StrictMode, Suspense } from 'react';

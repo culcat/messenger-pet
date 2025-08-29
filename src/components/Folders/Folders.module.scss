@@ -1,3 +1,5 @@
+@forward '../../styles/global.scss' as colors-*;
+
 .wrapper {
   display: flex;
   height: 100vh;
@@ -59,4 +61,3 @@
 .active {
   background: #e6f7ff !important;
 }
-

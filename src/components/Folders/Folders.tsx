@@ -21,6 +21,7 @@ export const Folders = ({
     setCollapsed(!isCollapsed);
   };
   const folders = useSelector((state: RootState) => state.folders);
+
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>

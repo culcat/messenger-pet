@@ -1,10 +1,11 @@
 .detailLayout {
-  background: var(--shape);
+  background: var(--background);
   border-radius: 16px;
   min-height: var(--body-height);
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  width: auto;
+  overflow-y: auto;
+  width: 70%;
+  max-width: 100%;
+  height: auto;
 }
 
 .contactInfo {

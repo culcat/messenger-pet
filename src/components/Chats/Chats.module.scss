@@ -12,13 +12,13 @@
 
 .wrapper {
   display: flex;
-  height: 100vh;
+  height: 100%;
   background: var(--background);
 
   @include mobile {
     flex-direction: column;
     height: auto;
-    min-height: 100%;
+
     padding: 0;
   }
 }
