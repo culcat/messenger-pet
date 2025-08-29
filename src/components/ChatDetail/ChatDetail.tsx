@@ -74,7 +74,7 @@ const ChatDetail: FC<ChatDetailProps> = ({ id }) => {
 
           <Space.Compact className={styles.inputBlock}>
             <Input placeholder="Type here..." />
-            <Button variant="text" icon={<ActionButton />} />
+            <Button type="primary" variant="text" icon={<ActionButton />} />
           </Space.Compact>
         </div>
       )}

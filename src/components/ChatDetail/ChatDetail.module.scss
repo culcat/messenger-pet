@@ -1,12 +1,12 @@
 .chatLayout {
-  border-left: 1px solid #ccc;
+  border-left: 1px solid var(--background);
   overflow-y: auto;
   width: 70%;
 }
 
 .messagesLayout {
   padding: 16px 24px;
-  background-color: #fff;
+  background-color: var(--shape);
   overflow: auto;
   min-height: 85vh;
 }
@@ -16,30 +16,30 @@
 }
 
 .messageRight {
-  width: 100%;
-  height: 100%;
+  width: var(--body-height);
+  height: var(--body-height);
 }
 
 .messageLeft {
-  width: 100%;
-  height: 100%;
+  width: var(--body-height);
+  height: var(--body-height);
 }
 
 .avatar {
-  background-color: #e6f0fa !important;
-  color: #3a7afe !important;
+  background-color: var(--blue-light) !important;
+  color: var(--blue) !important;
 }
 
 .messageBubbleYou {
   margin: 0;
-  background-color: #e6f0fa;
+  background-color: var(--background);
   padding: 10px;
   border-radius: 10px;
 }
 
 .messageBubbleOther {
   margin: 0;
-  background-color: #d8e2e7ff;
+  background-color: var(--background);
   padding: 10px;
   border-radius: 10px;
 }
@@ -52,5 +52,5 @@
   position: sticky;
   bottom: 0;
   padding: 16px 24px;
-  background: #fff;
+  background: var(--shape);
 }
