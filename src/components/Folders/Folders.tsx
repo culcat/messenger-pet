@@ -9,8 +9,13 @@ import styles from './Folders.module.scss';
 
 const { Text } = Typography;
 
-export const Folders = () => {
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+export const Folders = ({
+  selectedFolder,
+  setSelectedFolder,
+}: {
+  selectedFolder: string | null;
+  setSelectedFolder: (name: string | null) => void;
+}) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const toggleCollapse = () => {
     setCollapsed(!isCollapsed);
@@ -33,8 +38,8 @@ export const Folders = () => {
           dataSource={folders}
           renderItem={(item) => (
             <List.Item
-              className={`${styles.chatItem} ${selectedName === item.name ? styles.active : ''}`}
-              onClick={() => setSelectedName(item.name)}
+              className={`${styles.chatItem} ${selectedFolder === item.name ? styles.active : ''}`}
+              onClick={() => setSelectedFolder(selectedFolder === item.name ? null : item.name)}
             >
               <List.Item.Meta
                 avatar={

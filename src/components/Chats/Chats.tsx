@@ -15,6 +15,7 @@ const { Title, Text } = Typography;
 const Chats: FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchText, setSearchText] = useState('');
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isCollapsed, setCollapsed] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const toggleCollapse = () => {
@@ -26,7 +27,9 @@ const Chats: FC = () => {
   const filteredChats = chats.filter((chat) => {
     const chatName = chat.name.toLowerCase();
     const searchTextInput = searchText.toLowerCase();
-    return chatName.includes(searchTextInput);
+    const matchesSearch = chatName.includes(searchTextInput);
+    const matchesFolder = selectedFolder ? chat.folder === selectedFolder : true;
+    return matchesSearch && matchesFolder;
   });
 
   return (
@@ -51,7 +54,7 @@ const Chats: FC = () => {
 
         <Divider />
         <div className={styles.section}>
-          <Folders />
+          <Folders selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder} />
 
           <div className={styles.sectionHeader}>
             <Text strong>Chat</Text>
@@ -76,24 +79,7 @@ const Chats: FC = () => {
                     title={item.name}
                     description={item.messages[item.messages.length - 1].message}
                   />
-                  {item.folder && (
-                    <Paragraph
-                      style={{
-                        display: 'inline-block',
-                        background: '#f0f5ff',
-                        color: '#3a7afe',
-                        borderRadius: '12px',
-                        padding: '2px 12px',
-                        fontSize: '12px',
-                        marginTop: '4px',
-                        marginBottom: '0',
-                        fontWeight: 500,
-                        letterSpacing: '0.5px',
-                      }}
-                    >
-                      {item.folder}
-                    </Paragraph>
-                  )}
+                  {item.folder && <Paragraph className={styles.folderLabel}>{item.folder}</Paragraph>}
                 </List.Item>
               )}
             />

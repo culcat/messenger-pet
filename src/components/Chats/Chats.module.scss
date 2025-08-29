@@ -12,8 +12,8 @@
 
 .wrapper {
   display: flex;
-  height: 100%;
-  background: #f5f7fa;
+  height: 100vh;
+  background: var(--background);
 
   @include mobile {
     flex-direction: column;
@@ -25,7 +25,7 @@
 
 .chats {
   width: 350px;
-  background: #fff;
+  background: var(--shape);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 24px;
@@ -95,7 +95,7 @@
   border-radius: 8px;
 
   &:hover {
-    background: #f0f5ff;
+    background: var(--blue-light);
   }
 
   @include mobile {
@@ -105,7 +105,7 @@
 }
 
 .active {
-  background: #e6f7ff !important;
+  background: var(--blue-light) !important;
 }
 
 .addIcon {
@@ -123,4 +123,12 @@
   @include mobile {
     font-size: 16px;
   }
+}
+
+.folderLabel {
+  font-size: 12px;
+  color: var(--text-body);
+  background-color: var(--background);
+  border-radius: 12px;
+  padding: 2px 12px;
 }
