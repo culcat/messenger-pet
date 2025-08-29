@@ -6,6 +6,7 @@ import UserMultiple from '@assets/User--multiple.svg?react';
 import Settings from '@components/Settings/Settings';
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 import Chats from '../Chats/Chats';
 import { Contacts } from '../Contacts';
@@ -15,6 +16,8 @@ const { Sider } = Layout;
 
 const SideBar: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState('chats');
+  const isMobile = useMediaQuery({ maxWidth: 600 }); // до 600px считаем мобильным
+
   const widhtIcon = 26;
   const heightIcon = 30;
   const topMenu = [
@@ -56,6 +59,25 @@ const SideBar: React.FC = () => {
         return null;
     }
   };
+  if (isMobile) {
+    return (
+      <div className={styles.mobileWrapper}>
+        <div className={styles.mobileContent}>{renderContent()}</div>
+        <nav className={styles.mobileNav}>
+          {topMenu.concat(bottomMenu).map((item) => (
+            <button
+              key={item.key}
+              className={`${styles.mobileNavBtn} ${selectedKey === item.key ? styles.active : ''}`}
+              onClick={() => !item.disabled && setSelectedKey(item.key)}
+              disabled={item.disabled}
+            >
+              {item.icon}
+            </button>
+          ))}
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <Layout style={{ height: '100%' }}>
