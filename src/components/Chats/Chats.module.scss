@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   height: 100vh;
-  background: #fff;
+  background: var(--shape);
 }
 
 .chats {
@@ -49,13 +49,14 @@
 
 .chatItem {
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 15px;
+  border-block-end: none;
 
   &:hover {
-    background: #fafafa;
+    background: var(--background);
   }
 }
 
 .active {
-  background: #e6f7ff !important;
+  background: var(--blue-light) !important;
 }

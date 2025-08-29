@@ -2,6 +2,7 @@
   border-left: 1px solid var(--background);
   overflow-y: auto;
   width: 70%;
+  max-width: 100%;
 }
 
 .messagesLayout {
@@ -51,6 +52,6 @@
   align-items: center;
   position: sticky;
   bottom: 0;
-  padding: 16px 24px;
+  // padding: 16px 24px;
   background: var(--shape);
 }
