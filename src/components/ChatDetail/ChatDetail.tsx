@@ -5,7 +5,6 @@ import Title from 'antd/es/typography/Title';
 import { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { useParams } from 'react-router-dom';
 
 import { DateSend } from '@/components/DateSend/DateSend';
 import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
