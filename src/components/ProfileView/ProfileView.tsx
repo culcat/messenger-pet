@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-interface ProfileProps{
-    Profile:string
+interface ProfileProps {
+  Profile: string;
 }
 
-export const ProfileView: FC<ProfileProps> = ( Profile) => {
-    return <>{Profile.Profile}</>;
-}
+export const ProfileView: FC<ProfileProps> = (Profile) => {
+  return <>{Profile.Profile}</>;
+};

@@ -4,6 +4,7 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
+import { Link, Outlet } from 'react-router';
 
 import { RootState } from '../../store';
 import ChatDetail from '../ChatDetail/ChatDetail';
@@ -17,7 +18,7 @@ const Chats: FC = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isCollapsed, setCollapsed] = useState(true);
-  const isMobile = useMediaQuery({ maxWidth: 600 });
+  const isMobile = useMediaQuery({ maxWidth: 600 }); // до 600px считаем мобильным
   const toggleCollapse = () => {
     setCollapsed(!isCollapsed);
   };
@@ -34,6 +35,8 @@ const Chats: FC = () => {
 
   return (
     <div className={styles.wrapper}>
+          {(!isMobile || !selectedId) && (
+
       <div className={styles.chats}>
         <div className={styles.headerRow}>
           <Title level={4} className={styles.title}>
@@ -70,6 +73,8 @@ const Chats: FC = () => {
               itemLayout="horizontal"
               dataSource={filteredChats}
               renderItem={(item) => (
+                  <Link to={`/chat/${item.id}`} className={styles.chatLink}>
+
                 <List.Item
                   className={`${styles.chatItem} ${selectedId === item.id ? styles.active : ''}`}
                   onClick={() => setSelectedId(item.id)}
@@ -80,13 +85,18 @@ const Chats: FC = () => {
                     description={item.messages[item.messages.length - 1].message}
                   />
                   {item.folder && <Paragraph className={styles.folderLabel}>{item.folder}</Paragraph>}
+                  
                 </List.Item>
+                </Link>
               )}
             />
           )}
         </div>
-      </div>
-      {!isMobile ? <ChatDetail id={selectedId} /> : <></>}
+     
+      </div>)}
+          {(!isMobile && <Outlet />) || (isMobile && selectedId && <Outlet />)}
+
+    
     </div>
   );
 };

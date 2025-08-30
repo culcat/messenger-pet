@@ -6,7 +6,6 @@ import isToday from "dayjs/plugin/isToday";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import weekday from "dayjs/plugin/weekday";
 
-import { getWeekDay } from "@/utils/getWeekDay";
 
 dayjs.extend(weekday);
 dayjs.extend(localizedFormat);
@@ -26,7 +25,7 @@ export const DateSend = ({ dateSend }: dateProps) => {
     const time = sendDate.format("HH:mm");
     return <Paragraph>Today at {time}</Paragraph>;
   } else if (sendDate.isSameOrAfter(today.subtract(7, "day"))) {
-    const dayName = getWeekDay(sendDate.toDate());
+    const dayName = sendDate.format("dddd");
     const time = sendDate.format("hh:mm A");
     return (
       <Paragraph>

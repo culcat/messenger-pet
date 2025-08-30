@@ -1,9 +1,11 @@
 import ActionButton from '@assets/_Action button.svg?react';
-import { Avatar, Button, Flex, Input, List, Space } from 'antd';
+import { Avatar, Button, Divider, Flex, Input, List, Space } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { DateSend } from '@/components/DateSend/DateSend';
 import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
@@ -12,13 +14,16 @@ import { RootState } from '../../store';
 import { ChatHeader } from '../ChatHeader';
 import styles from './ChatDetail.module.scss';
 
-interface ChatDetailProps {
-  id: number | null;
-}
-
-const ChatDetail: FC<ChatDetailProps> = ({ id }) => {
+// interface ChatDetailProps {
+//   id: number | null;
+// }
+const ChatDetail: FC = () => {
+  const location = useLocation();
+  const { id } = location.pathname.split('/chat/')[1] ? { id: location.pathname.split('/chat/')[1] } : { id: null };
+  // const chatId = id ? parseInt(id, 10) : null;
+  const isMobile = window.innerWidth <= 600;
   const chats = useSelector((state: RootState) => state.chats);
-  const chat = chats.find((c) => c.id === id);
+  const chat = chats.find((c) => c.id === Number(id));
 
   const scrollToRef = useRef<HTMLDivElement>(null);
 
@@ -34,6 +39,7 @@ const ChatDetail: FC<ChatDetailProps> = ({ id }) => {
       {id !== null && chat && (
         <div className={styles.chatWrapper}>
           <ChatHeader chat={chat} />
+          <Divider className={styles.divider} />
           <div className={styles.messagesLayout}>
             <List
               itemLayout="vertical"
@@ -78,6 +84,7 @@ const ChatDetail: FC<ChatDetailProps> = ({ id }) => {
           </Space.Compact>
         </div>
       )}
+      {isMobile && <Divider className={styles.divider} />}
     </div>
   );
 };
