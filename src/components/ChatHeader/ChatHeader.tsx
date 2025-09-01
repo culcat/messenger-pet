@@ -33,13 +33,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ chat }) => {
             </Title>
           </div>
         </Flex>
-        <Flex align="center" gap="middle">
-          <Space size="middle">
-            <Button className={styles.profileButton} color="default" variant="solid">
-              View profile
-            </Button>
-          </Space>
-        </Flex>
       </Content>
     </div>
   );

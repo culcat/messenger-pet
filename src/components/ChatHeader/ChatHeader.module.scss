@@ -14,7 +14,7 @@
   border-bottom: 1px solid var(--line);
   position: fixed;
   top: 0;
-  z-index: 10;
+  z-index: 1;
   width: 100%;
   background: var(--shape);
 }
@@ -40,16 +40,6 @@
 
   @include tablet {
     font-size: 18px;
-  }
-}
-
-.profileButton {
-  border: none !important;
-  border-radius: 20px !important;
-
-  @include tablet {
-    padding: 4px 12px;
-    font-size: 14px;
   }
 }
 

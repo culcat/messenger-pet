@@ -2,6 +2,7 @@ import './styles/index.scss';
 
 import { ConfigProvider, Flex, Spin } from 'antd';
 import { lazy, StrictMode, Suspense } from 'react';
+import { CookiesProvider } from 'react-cookie';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router';
@@ -61,14 +62,16 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider
-      theme={{
-        token: { colorPrimary: '#121F24' },
-      }}
-    >
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </ConfigProvider>
+    <CookiesProvider>
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary: '#121F24' },
+        }}
+      >
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ConfigProvider>
+    </CookiesProvider>
   </StrictMode>,
 );
