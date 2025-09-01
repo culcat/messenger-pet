@@ -1,8 +1,8 @@
 import ChatBot from '@assets/Chat-bot.svg?react';
 import Logo from '@assets/Logo.svg?react';
 import Setting from '@assets/Settings.svg?react';
-import Star from '@assets/Star.svg?react';
 import UserMultiple from '@assets/User--multiple.svg?react';
+import { MessengerAbout } from '@components/MessengerAbout/MessengerAbout';
 import Settings from '@components/Settings/Settings';
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
@@ -11,8 +11,6 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useCheckTokenMutation } from '@/store/authApi';
 
-import Chats from '../Chats/Chats';
-import { Contacts } from '../Contacts';
 import styles from './SideBar.module.scss';
 
 const { Sider } = Layout;
@@ -41,60 +39,29 @@ const SideBar: React.FC = () => {
     }
   }, [checkToken, cookies.access_token, setCookie]);
 
-  const widhtIcon = 26;
+  const widthIcon = 26;
   const heightIcon = 30;
-  const topMenu = [
-    {
-      key: 'logo',
-      icon: <Logo style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
-      disabled: true,
-    },
-    {
-      key: 'chats',
-      icon: <ChatBot style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
-    },
-    {
-      key: 'contacts',
-      icon: <UserMultiple style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
-    },
+
+  const menuItems = [
+    { key: 'logo', icon: <Logo width={widthIcon} height={heightIcon} />, path: '/' },
+    { key: 'chats', icon: <ChatBot width={widthIcon} height={heightIcon} />, path: '/chat' },
+    { key: 'contacts', icon: <UserMultiple width={widthIcon} height={heightIcon} />, path: '/contacts' },
+    { key: 'settings', icon: <Setting width={widthIcon} height={heightIcon} />, path: '/settings' },
   ];
 
-  const bottomMenu = [
-    {
-      key: 'settings',
-      icon: <Setting style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
-    },
-    {
-      key: 'stars',
-      icon: <Star style={{ marginLeft: '10px' }} width={widhtIcon} height={heightIcon} />,
-    },
-  ];
-
-  const renderContent = () => {
-    switch (selectedKey) {
-      case 'chats':
-        return <Chats />;
-      case 'contacts':
-        return <Contacts />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return null;
-    }
-  };
   if (isMobile) {
     return (
       <div className={styles.mobileWrapper}>
-        <div className={styles.mobileContent}>{renderContent()}</div>
+        <div className={styles.mobileContent}>
+          <Outlet /> {/* Используем Outlet вместо ручного рендеринга */}
+        </div>
         <nav className={styles.mobileNav}>
-          {topMenu.concat(bottomMenu).map((item) => (
+          {menuItems.map((item) => (
             <button
               key={item.key}
-              className={`${styles.mobileNavBtn} ${selectedKey === item.key ? styles.active : ''}`}
-              onClick={() => !item.disabled && setSelectedKey(item.key)}
-              disabled={item.disabled}
+              className={`${styles.mobileNavBtn} ${location.pathname === item.path ? styles.active : ''}`}
             >
-              {item.icon}
+              <Link to={item.path}>{item.icon}</Link>
             </button>
           ))}
         </nav>
@@ -105,35 +72,21 @@ const SideBar: React.FC = () => {
   return (
     <Layout style={{ height: '100%' }}>
       <Sider className={styles.sider} collapsed={false}>
-        <div className={styles.menuBlock}>
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            onClick={(e) => setSelectedKey(e.key)}
-            className={styles.menu}
-            items={topMenu.map((item) => ({
-              key: item.key,
-              icon: item.icon,
-              disabled: item.disabled,
-            }))}
-          />
-
-          <div className={styles.divider} />
-
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            onClick={(e) => setSelectedKey(e.key)}
-            className={styles.menu}
-            items={bottomMenu.map((item) => ({
-              key: item.key,
-              icon: item.icon,
-            }))}
-          />
-        </div>
+        <Menu
+          mode="inline"
+          selectedKeys={[menuItems.find((item) => location.pathname.startsWith(item.path))?.key || 'logo']}
+          className={styles.menu}
+          items={menuItems.map((item) => ({
+            key: item.key,
+            icon: <Link to={item.path}>{item.icon}</Link>,
+            label: '',
+          }))}
+        />
       </Sider>
       <Layout>
-        <div className={styles.content}>{renderContent()}</div>
+        <div className={styles.content}>
+          <Outlet /> {/* Используем Outlet вместо ручного рендеринга */}
+        </div>
       </Layout>
     </Layout>
   );

@@ -1,21 +1,26 @@
-import { Button, Divider,Layout } from "antd";
-import { Content } from "antd/es/layout/layout";
-import Paragraph from "antd/es/typography/Paragraph";
-import Title from "antd/es/typography/Title";
-import { FC } from "react";
-import { useSelector } from "react-redux";
+import { Button, Divider, Layout } from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import Paragraph from 'antd/es/typography/Paragraph';
+import Title from 'antd/es/typography/Title';
+import { FC } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 
-import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
+import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
 
-import { RootState } from "../../store";
-import styles from "./ContactDetail.module.scss";
-interface ChatDetailProps {
-  id: number | null;
-}
+import { RootState } from '../../store';
+import styles from './ContactDetail.module.scss';
+// interface ChatDetailProps {
+//   id: number | null;
+// }
 
-const ContactDetail: FC<ChatDetailProps> = ({id}) => {
+const ContactDetail: FC = () => {
+  const location = useLocation();
+  const { id } = location.pathname.split('/contact/')[1]
+    ? { id: location.pathname.split('/contact/')[1] }
+    : { id: null };
   const contacts = useSelector((state: RootState) => state.contacts);
-  const contact = contacts.find((c) => c.id === id);
+  const contact = contacts.find((c) => c.id === Number(id));
 
   return (
     <Layout className={styles.detailLayout}>
@@ -30,9 +35,7 @@ const ContactDetail: FC<ChatDetailProps> = ({id}) => {
                 <Title level={3} style={{ marginBottom: 0 }}>
                   {contact.name}
                 </Title>
-                <Paragraph style={{ marginBottom: 0 }}>
-                  {contact.number}
-                </Paragraph>
+                <Paragraph style={{ marginBottom: 0 }}>{contact.number}</Paragraph>
               </div>
               <div className={styles.headerActions}>
                 <Button shape="circle" icon={<span>💬</span>} />
@@ -48,7 +51,7 @@ const ContactDetail: FC<ChatDetailProps> = ({id}) => {
               </Paragraph>
               <Paragraph>
                 Email
-                <br /> {contact.email || "Not provided"}
+                <br /> {contact.email || 'Not provided'}
               </Paragraph>
             </div>
           </div>
