@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import ChatDetail from './components/ChatDetail/ChatDetail';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import { Register } from './pages/register/Register';
 import { store } from './store';
 
 const Messages = lazy(() => import('@/pages/messages/Messages').then((module) => ({ default: module.Messages })));
@@ -24,12 +26,14 @@ const router = createBrowserRouter([
           </Flex>
         }
       >
-        <Messages />
+        <ProtectedRoute>
+          <Messages />
+        </ProtectedRoute>
       </Suspense>
     ),
     children: [
       {
-        path: ':id', // теперь это вложенный роут
+        path: ':id',
         element: (
           <Suspense
             fallback={
@@ -55,6 +59,20 @@ const router = createBrowserRouter([
         }
       >
         <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'register',
+    element: (
+      <Suspense
+        fallback={
+          <Flex justify="center" align="center" style={{ height: '90vh' }}>
+            <Spin tip="Loading" size="large"></Spin>
+          </Flex>
+        }
+      >
+        <Register />
       </Suspense>
     ),
   },

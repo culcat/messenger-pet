@@ -1,38 +1,18 @@
 import { Button, Checkbox, Form, FormProps, Input } from 'antd';
-import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 
-import { useCheckTokenMutation, useLoginMutation } from '@/store/authApi';
+import { useRegisterMutation } from '@/store/authApi';
 import { Login } from '@/types/login';
-
-export const LoginForm = () => {
-  const [login, { isLoading, error }] = useLoginMutation();
+export const RegisterForm = () => {
+  const [login, { isLoading, error }] = useRegisterMutation();
   const [cookies, setCookie] = useCookies(['access_token', 'username']);
-  const [checkToken] = useCheckTokenMutation();
-
   const navigate = useNavigate();
-  useEffect(() => {
-    const validateToken = async () => {
-      try {
-        const data = await checkToken({ token: cookies.access_token }).unwrap();
-        setCookie('username', data.username, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 30,
-          sameSite: 'lax',
-        });
-      } catch (error) {
-        console.error('Token validation failed:', error);
-      }
-    };
-    if (cookies.access_token) {
-      validateToken();
-    }
-  }, [checkToken, cookies.access_token, setCookie]);
-
   const onFinish: FormProps<Login>['onFinish'] = async (values) => {
     try {
       const res = await login({ username: values.username, password: values.password }).unwrap();
+      console.log('Logged in:', res);
       setCookie('access_token', res.access_token, {
         path: '/',
         maxAge: 60 * 60 * 24 * 30,

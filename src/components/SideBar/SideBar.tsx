@@ -6,10 +6,7 @@ import UserMultiple from '@assets/User--multiple.svg?react';
 import Settings from '@components/Settings/Settings';
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useMediaQuery } from 'react-responsive';
-
-import { useCheckTokenMutation } from '@/store/authApi';
 
 import Chats from '../Chats/Chats';
 import { Contacts } from '../Contacts';
@@ -19,27 +16,8 @@ const { Sider } = Layout;
 
 const SideBar: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState('chats');
-  const [checkToken] = useCheckTokenMutation();
-  const [cookies, setCookie] = useCookies(['username', 'access_token']);
+
   const isMobile = useMediaQuery({ maxWidth: 600 });
-  React.useEffect(() => {
-    const validateToken = async () => {
-      try {
-        const data = await checkToken({ token: cookies.access_token }).unwrap();
-        console.log('Token is valid:', data);
-        setCookie('username', data.username, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 30,
-          sameSite: 'lax',
-        });
-      } catch (error) {
-        console.error('Token validation failed:', error);
-      }
-    };
-    if (cookies.access_token) {
-      validateToken();
-    }
-  }, [checkToken, cookies.access_token, setCookie]);
 
   const widhtIcon = 26;
   const heightIcon = 30;

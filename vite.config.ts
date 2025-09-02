@@ -4,13 +4,13 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  // css: {
-  //   preprocessorOptions: {
-  //     scss: {
-  //       additionalData: `@import "@/styles/global.scss";`,
-  //     },
-  //   },
-  // },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/global.scss";`,
+      },
+    },
+  },
   plugins: [react(), svgr()],
   resolve: {
     alias: {

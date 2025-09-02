@@ -1,19 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { authApi } from './authApi';
-import chatsReducer from './chatsSlice';
 import contactsReducer from './contactsSlice';
 import folderReducer from './folderSlice';
-import { messagesApi } from './messagesApi';
+import { messagesSlice } from './messageSlice';
+
 export const store = configureStore({
   reducer: {
-    chats: chatsReducer,
     contacts: contactsReducer,
     folders: folderReducer,
     [authApi.reducerPath]: authApi.reducer,
-    [messagesApi.reducerPath]: messagesApi.reducer,
+    [messagesSlice.name]: messagesSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, messagesApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
