@@ -3,14 +3,12 @@ import { Avatar, Button, Divider, Input, List, Typography } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Cookies from 'js-cookie';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import { Link, Outlet, useNavigate } from 'react-router';
 
-import { connectMessagesSocket, getConversation, getDialogs } from '@/store/messageSlice';
+import { useGetDialogsQuery } from '@/store/messagesApi';
+import type { Dialog } from '@/types/messages';
 
-import type { AppDispatch } from '../../store';
-import { RootState } from '../../store';
 import { Folders } from '../Folders/Folders';
 import styles from './Chats.module.scss';
 
@@ -22,24 +20,16 @@ const Chats: FC = () => {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isCollapsed, setCollapsed] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 600 });
-
-  const token = Cookies.get('access_token');
+  const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
+  const dialogsArray = dialogs ? dialogs.ids.map((id) => dialogs.entities[id]!) : [];
+  if (isLoading) return <div>Загрузка диалогов...</div>;
+  if (isError) return <div>Ошибка при загрузке диалогов</div>;
+  if (!dialogs) return <div>Нет доступных диалогов</div>;
+  const currentUser = Cookies.get('username');
 
   const toggleCollapse = () => {
     setCollapsed(!isCollapsed);
   };
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { dialogs, messages, connected } = useSelector((state: RootState) => state.messages);
-  useEffect(() => {
-    dispatch(connectMessagesSocket(String(token)));
-  }, [dispatch, token]);
-
-  useEffect(() => {
-    if (connected) {
-      dispatch(getDialogs());
-    }
-  }, [connected, dispatch]);
 
   return (
     <div className={styles.wrapper}>
@@ -78,16 +68,19 @@ const Chats: FC = () => {
             {isCollapsed && (
               <List
                 itemLayout="horizontal"
-                dataSource={dialogs}
+                dataSource={dialogsArray}
                 renderItem={(item) => (
-                  <Link to={`/chat/${item.id}`} className={styles.chatLink}>
+                  <Link
+                    to={`/chat/${item.sender.username !== currentUser ? item.sender.id : item.receiver.id}`}
+                    className={styles.chatLink}
+                  >
                     <List.Item
                       className={`${styles.chatItem} ${selectedId === item.id ? styles.active : ''}`}
-                      onClick={() => setSelectedId(item.id)}
+                      onClick={() => setSelectedId(item.sender.id)}
                     >
                       <List.Item.Meta
                         avatar={<Avatar>{item.sender.username[0]}</Avatar>}
-                        title={item.receiver.username}
+                        title={item.sender.username !== currentUser ? item.sender.username : item.receiver.username}
                         description={item.text}
                       />
                       {/* {item.folder && <Paragraph className={styles.folderLabel}>{item.folder}</Paragraph>} */}
@@ -105,3 +98,30 @@ const Chats: FC = () => {
 };
 
 export default Chats;
+
+// import React from 'react';
+
+// const Chats: React.FC = () => {
+//   const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
+
+//   return (
+//     <div>
+//       <h2>Диалоги</h2>
+//       <ul>
+//         {Object.values(dialogs.entities).map(
+//           (dialog) =>
+//             dialog && (
+//               <li key={dialog.id}>
+//                 <strong>{dialog.sender.username}</strong> → <span>{dialog.receiver.username}</span>
+//                 <div>
+//                   {dialog.text} <small>({new Date(dialog.createdAt).toLocaleString()})</small>
+//                 </div>
+//               </li>
+//             ),
+//         )}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default Chats;
