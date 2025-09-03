@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-// import * as types from '@/types/login';
-import {} from '@/types';
+import { CheckTokenRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest, User } from '@/types';
 
 import { baseQueryWithReauth } from './baseQuery';
 
@@ -10,7 +9,7 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
-    register: builder.mutation<types.LoginResponse, types.RegisterRequest>({
+    register: builder.mutation<LoginResponse, RegisterRequest>({
       query: (body) => ({
         url: '/auth/register',
         method: 'POST',
@@ -18,7 +17,7 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['Auth'],
     }),
-    login: builder.mutation<types.LoginResponse, types.LoginRequest>({
+    login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
         url: '/auth/login',
         method: 'POST',
@@ -26,14 +25,14 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['Auth'],
     }),
-    checkToken: builder.mutation<types.User, types.CheckTokenRequest>({
+    checkToken: builder.mutation<User, CheckTokenRequest>({
       query: (body) => ({
         url: '/auth/check',
         method: 'POST',
         body,
       }),
     }),
-    refreshToken: builder.mutation<types.RefreshTokenResponse, { refreshToken: string }>({
+    refreshToken: builder.mutation<RefreshTokenResponse, { refreshToken: string }>({
       query: (body) => ({
         url: '/auth/refresh',
         method: 'POST',

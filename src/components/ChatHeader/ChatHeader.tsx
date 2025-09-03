@@ -3,6 +3,7 @@ import { Avatar, Button, Flex, Space } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import { FC } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { Link } from 'react-router';
 
 import { ChatItem } from '@/types/chat';
@@ -14,11 +15,11 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = ({ chat }) => {
-  const isMobile = window.innerWidth <= 600;
+  const isMobile = useMediaQuery({ maxWidth: 600 });
   return (
     <div className={styles.headerWrapper}>
       <Content className={styles.headerContent}>
-        <Flex align="center" gap="middle">
+        <Flex align="center" gap={16}>
           {isMobile && (
             <Link to="/chat" reloadDocument>
               <Avatar size={40}>

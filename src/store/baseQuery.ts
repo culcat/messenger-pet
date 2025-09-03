@@ -53,13 +53,11 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
         } catch (error) {
           console.error('Refresh token failed:', error);
           TokenService.clearTokens();
-          window.location.href = '/login';
         } finally {
           isRefreshing = false;
         }
       } else {
         TokenService.clearTokens();
-        window.location.href = '/login';
       }
     } else {
       return new Promise((resolve) => {

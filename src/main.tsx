@@ -7,13 +7,16 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
+import { Error } from '@/pages/error/Error';
+
 import ChatDetail from './components/ChatDetail/ChatDetail';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { Register } from './pages/register/Register';
 import { store } from './store';
+import { themeCust } from './utils/theme';
 
-const Messages = lazy(() => import('@/pages/messages/Messages').then((module) => ({ default: module.Messages })));
-const Login = lazy(() => import('@/pages/login/Login').then((module) => ({ default: module.Login })));
+const Messages = lazy(() => import('@/pages/messages/Messages'));
+const Login = lazy(() => import('@/pages/login/Login'));
 
 const router = createBrowserRouter([
   {
@@ -76,16 +79,26 @@ const router = createBrowserRouter([
       </Suspense>
     ),
   },
+  {
+    path: '*',
+    element: (
+      <Suspense
+        fallback={
+          <Flex justify="center" align="center" style={{ height: '90vh' }}>
+            <Spin tip="Loading" size="large"></Spin>
+          </Flex>
+        }
+      >
+        <Error />
+      </Suspense>
+    ),
+  },
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <CookiesProvider>
-      <ConfigProvider
-        theme={{
-          token: { colorPrimary: '#121F24' },
-        }}
-      >
+      <ConfigProvider theme={themeCust}>
         <Provider store={store}>
           <RouterProvider router={router} />
         </Provider>

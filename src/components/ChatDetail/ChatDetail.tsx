@@ -4,24 +4,24 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
 import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
 
+import { ChatHeader } from '@/components/ChatHeader';
 import { DateSend } from '@/components/DateSend/DateSend';
 import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
+import { RootState } from '@/store';
 
-import { RootState } from '../../store';
-import { ChatHeader } from '../ChatHeader';
 import styles from './ChatDetail.module.scss';
 
 // interface ChatDetailProps {
 //   id: number | null;
 // }
 const ChatDetail: FC = () => {
-  const location = useLocation();
-  const { id } = location.pathname.split('/chat/')[1] ? { id: location.pathname.split('/chat/')[1] } : { id: null };
-  // const chatId = id ? parseInt(id, 10) : null;
-  const isMobile = window.innerWidth <= 600;
+  const { id } = useParams<{ id: string }>();
+
+  const isMobile = useMediaQuery({ maxWidth: 600 });
   const chats = useSelector((state: RootState) => state.chats);
   const chat = chats.find((c) => c.id === Number(id));
 
@@ -47,9 +47,9 @@ const ChatDetail: FC = () => {
               renderItem={(item) => (
                 <List.Item className={styles.listItem}>
                   {item.sender === 'You' ? (
-                    <Flex gap="middle" justify="flex-end" align="flex-start" className={styles.messageRight}>
+                    <Flex gap={16} justify="flex-end" align="flex-start" className={styles.messageRight}>
                       <Flex vertical>
-                        <Flex align="baseline" gap="middle">
+                        <Flex align="baseline" gap={16}>
                           <Title level={5}>{item.sender}</Title>
                           <Paragraph>
                             <DateSend dateSend={item.time} />
@@ -59,10 +59,10 @@ const ChatDetail: FC = () => {
                       </Flex>
                     </Flex>
                   ) : (
-                    <Flex align="baseline" gap="middle" className={styles.messageLeft}>
+                    <Flex align="baseline" gap={16} className={styles.messageLeft}>
                       <Avatar className={styles.avatar}>{item.sender[0]}</Avatar>
                       <Flex vertical>
-                        <Flex align="baseline" gap="middle">
+                        <Flex align="baseline" gap={16}>
                           <Title level={5}>{item.sender}</Title>
                           <Paragraph>
                             <DateSend dateSend={item.time} />
