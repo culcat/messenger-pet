@@ -10,11 +10,7 @@ import { ChatItem } from '@/types/chat';
 
 import styles from './ChatHeader.module.scss';
 
-interface ChatHeaderProps {
-  chat: ChatItem;
-}
-
-export const ChatHeader: FC<ChatHeaderProps> = ({ chat }) => {
+export const ChatHeader: FC = () => {
   const isMobile = useMediaQuery({ maxWidth: 600 });
   return (
     <div className={styles.headerWrapper}>
@@ -27,11 +23,9 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ chat }) => {
               </Avatar>
             </Link>
           )}
-          <Avatar size={48}>{chat.name[0]}</Avatar>
+          <Avatar size={48}></Avatar>
           <div>
-            <Title level={4} className={styles.chatTitle}>
-              {chat.name}
-            </Title>
+            <Title level={4} className={styles.chatTitle}></Title>
           </div>
         </Flex>
       </Content>

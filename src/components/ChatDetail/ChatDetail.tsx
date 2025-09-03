@@ -1,89 +1,104 @@
 import ActionButton from '@assets/_Action button.svg?react';
-import { Avatar, Button, Divider, Flex, Input, List, Space } from 'antd';
+import { Avatar, Button, Divider, Input, List, Space } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
-import { FC, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
 
 import { ChatHeader } from '@/components/ChatHeader';
-import { DateSend } from '@/components/DateSend/DateSend';
 import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
-import { RootState } from '@/store';
+import { useGetConversationQuery, useSendMessageMutation } from '@/store/messagesApi';
+import { messagesAdapter } from '@/store/messageSlice';
 
 import styles from './ChatDetail.module.scss';
 
-// interface ChatDetailProps {
-//   id: number | null;
-// }
+const { TextArea } = Input;
+
 const ChatDetail: FC = () => {
   const { id } = useParams<{ id: string }>();
+  console.log(id);
+
+  const userId = Number(id);
+  const currentUser = Cookies.get('username') || '';
+
+  const {
+    data: conversation,
+    isLoading,
+    isError,
+  } = useGetConversationQuery(userId, {
+    skip: !userId,
+  });
+
+  const [sendMessage] = useSendMessageMutation();
+  const [newMessage, setNewMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const isMobile = useMediaQuery({ maxWidth: 600 });
-  const chats = useSelector((state: RootState) => state.chats);
-  const chat = chats.find((c) => c.id === Number(id));
 
-  const scrollToRef = useRef<HTMLDivElement>(null);
+  // Скролл вниз при изменении сообщений
+  const messagesArray = conversation ? messagesAdapter.getSelectors().selectAll(conversation) : [];
 
   useEffect(() => {
-    if (scrollToRef.current) {
-      scrollToRef.current.scrollIntoView({});
-    }
-  }, [chat?.messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messagesArray]);
+
+  const handleSend = async () => {
+    if (!newMessage.trim()) return;
+    await sendMessage({ text: newMessage, receiverId: userId });
+    setNewMessage('');
+  };
+
+  if (id == null || undefined) return <MessengerAbout />;
+  if (isLoading) return <div>Загрузка сообщений...</div>;
+  if (isError) return <div>Ошибка при загрузке сообщений</div>;
 
   return (
     <div className={styles.chatLayout}>
-      {id === null && <MessengerAbout />}
-      {id !== null && chat && (
-        <div className={styles.chatWrapper}>
-          <ChatHeader chat={chat} />
-          <Divider className={styles.divider} />
-          <div className={styles.messagesLayout}>
-            <List
-              itemLayout="vertical"
-              dataSource={chat.messages}
-              renderItem={(item) => (
-                <List.Item className={styles.listItem}>
-                  {item.sender === 'You' ? (
-                    <Flex gap={16} justify="flex-end" align="flex-start" className={styles.messageRight}>
-                      <Flex vertical>
-                        <Flex align="baseline" gap={16}>
-                          <Title level={5}>{item.sender}</Title>
-                          <Paragraph>
-                            <DateSend dateSend={item.time} />
-                          </Paragraph>
-                        </Flex>
-                        <Paragraph className={styles.messageBubbleYou}>{item.message}</Paragraph>
-                      </Flex>
-                    </Flex>
+      <div className={styles.chatWrapper}>
+        <ChatHeader />
+        <Divider className={styles.divider} />
+
+        <div className={styles.messagesLayout}>
+          <List
+            itemLayout="vertical"
+            dataSource={messagesArray}
+            renderItem={(item) => {
+              const isCurrentUser = item.sender.username === currentUser;
+
+              return (
+                <List.Item className={isCurrentUser ? styles.messageRight : styles.messageLeft}>
+                  {isCurrentUser ? (
+                    <div className={styles.messageBubbleYou}>
+                      <Title level={5}>{item.sender.username}</Title>
+                      <Paragraph>{item.text}</Paragraph>
+                    </div>
                   ) : (
-                    <Flex align="baseline" gap={16} className={styles.messageLeft}>
-                      <Avatar className={styles.avatar}>{item.sender[0]}</Avatar>
-                      <Flex vertical>
-                        <Flex align="baseline" gap={16}>
-                          <Title level={5}>{item.sender}</Title>
-                          <Paragraph>
-                            <DateSend dateSend={item.time} />
-                          </Paragraph>
-                        </Flex>
-                        <Paragraph className={styles.messageBubbleOther}>{item.message}</Paragraph>
-                      </Flex>
-                    </Flex>
+                    <div className={styles.messageBubbleOther}>
+                      <Avatar>{item.sender.username[0]}</Avatar>
+                      <Title level={5}>{item.sender.username}</Title>
+                      <Paragraph>{item.text}</Paragraph>
+                    </div>
                   )}
                 </List.Item>
-              )}
-            />
-            <div ref={scrollToRef}></div>
-          </div>
-
-          <Space.Compact className={styles.inputBlock}>
-            <Input placeholder="Type here..." />
-            <Button type="primary" variant="text" icon={<ActionButton />} />
-          </Space.Compact>
+              );
+            }}
+          />
+          <div ref={messagesEndRef} />
         </div>
-      )}
+
+        <Space.Compact className={styles.inputBlock} style={{ width: '100%' }}>
+          <TextArea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            rows={2}
+            placeholder="Type here..."
+          />
+          <Button type="primary" onClick={handleSend} icon={<ActionButton />} />
+        </Space.Compact>
+      </div>
+
       {isMobile && <Divider className={styles.divider} />}
     </div>
   );
