@@ -4,7 +4,7 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import Cookies from 'js-cookie';
 import { FC, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Link, Outlet, useNavigate } from 'react-router';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import { useGetDialogsQuery } from '@/store/messagesApi';
 import type { Dialog } from '@/types/messages';
@@ -22,9 +22,9 @@ const Chats: FC = () => {
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
   const dialogsArray = dialogs ? dialogs.ids.map((id) => dialogs.entities[id]!) : [];
-  if (isLoading) return <div>Загрузка диалогов...</div>;
-  if (isError) return <div>Ошибка при загрузке диалогов</div>;
-  if (!dialogs) return <div>Нет доступных диалогов</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error</div>;
+  if (!dialogs) return <div>Not Found</div>;
   const currentUser = Cookies.get('username');
 
   const toggleCollapse = () => {
@@ -98,30 +98,3 @@ const Chats: FC = () => {
 };
 
 export default Chats;
-
-// import React from 'react';
-
-// const Chats: React.FC = () => {
-//   const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
-
-//   return (
-//     <div>
-//       <h2>Диалоги</h2>
-//       <ul>
-//         {Object.values(dialogs.entities).map(
-//           (dialog) =>
-//             dialog && (
-//               <li key={dialog.id}>
-//                 <strong>{dialog.sender.username}</strong> → <span>{dialog.receiver.username}</span>
-//                 <div>
-//                   {dialog.text} <small>({new Date(dialog.createdAt).toLocaleString()})</small>
-//                 </div>
-//               </li>
-//             ),
-//         )}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default Chats;

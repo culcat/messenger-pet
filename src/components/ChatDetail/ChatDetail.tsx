@@ -3,7 +3,7 @@ import { Avatar, Button, Divider, Input, List, Space } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import Cookies from 'js-cookie';
-import { FC, useEffect, useRef, useState } from 'react';
+import { Component, FC, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useParams } from 'react-router-dom';
 
@@ -18,9 +18,8 @@ const { TextArea } = Input;
 
 const ChatDetail: FC = () => {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
+  const userId = id ? Number(id) : null;
 
-  const userId = Number(id);
   const currentUser = Cookies.get('username') || '';
 
   const {
