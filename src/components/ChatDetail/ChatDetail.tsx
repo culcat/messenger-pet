@@ -1,7 +1,8 @@
 import ActionButton from '@assets/_Action button.svg?react';
-import { Avatar, Button, Divider, Input, List, Space } from 'antd';
+import { Avatar, Button, Divider, Flex, Input, List, Space } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
+import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import { Component, FC, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -22,13 +23,7 @@ const ChatDetail: FC = () => {
 
   const currentUser = Cookies.get('username') || '';
 
-  const {
-    data: conversation,
-    isLoading,
-    isError,
-  } = useGetConversationQuery(userId, {
-    skip: !userId,
-  });
+  const { data: conversation, isLoading, isError } = useGetConversationQuery(Number(userId));
 
   const [sendMessage] = useSendMessageMutation();
   const [newMessage, setNewMessage] = useState('');
@@ -38,15 +33,16 @@ const ChatDetail: FC = () => {
 
   // Скролл вниз при изменении сообщений
   const messagesArray = conversation ? messagesAdapter.getSelectors().selectAll(conversation) : [];
-
   useEffect(() => {
+    setNewMessage('');
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messagesArray]);
+  }, [id]);
 
   const handleSend = async () => {
     if (!newMessage.trim()) return;
-    await sendMessage({ text: newMessage, receiverId: userId });
+    await sendMessage({ text: newMessage, receiverId: Number(userId) });
     setNewMessage('');
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   if (id == null || undefined) return <MessengerAbout />;
@@ -54,40 +50,44 @@ const ChatDetail: FC = () => {
   if (isError) return <div>Ошибка при загрузке сообщений</div>;
 
   return (
-    <div className={styles.chatLayout}>
+    <div key={id} className={styles.chatLayout}>
       <div className={styles.chatWrapper}>
-        <ChatHeader />
+        <ChatHeader userName={messagesArray} />
         <Divider className={styles.divider} />
 
         <div className={styles.messagesLayout}>
           <List
-            itemLayout="vertical"
             dataSource={messagesArray}
             renderItem={(item) => {
               const isCurrentUser = item.sender.username === currentUser;
 
               return (
-                <List.Item className={isCurrentUser ? styles.messageRight : styles.messageLeft}>
-                  {isCurrentUser ? (
-                    <div className={styles.messageBubbleYou}>
-                      <Title level={5}>{item.sender.username}</Title>
-                      <Paragraph>{item.text}</Paragraph>
-                    </div>
-                  ) : (
-                    <div className={styles.messageBubbleOther}>
-                      <Avatar>{item.sender.username[0]}</Avatar>
-                      <Title level={5}>{item.sender.username}</Title>
-                      <Paragraph>{item.text}</Paragraph>
-                    </div>
-                  )}
-                </List.Item>
+                <div
+                  className={clsx(styles.messageRow, {
+                    [styles.right]: isCurrentUser,
+                    [styles.left]: !isCurrentUser,
+                  })}
+                >
+                  {!isCurrentUser && <Avatar>{item.sender.username[0]}</Avatar>}
+
+                  <div
+                    className={clsx({
+                      [styles.messageBubbleYou]: isCurrentUser,
+                      [styles.messageBubbleOther]: !isCurrentUser,
+                    })}
+                  >
+                    {!isCurrentUser && <div style={{ fontWeight: 600, marginBottom: 4 }}>{item.sender.username}</div>}
+                    <Paragraph style={{ margin: 0 }}>{item.text}</Paragraph>
+                    <div className={styles.messageMeta}>{new Date(item.createdAt).toLocaleString()}</div>
+                  </div>
+                </div>
               );
             }}
           />
           <div ref={messagesEndRef} />
         </div>
 
-        <Space.Compact className={styles.inputBlock} style={{ width: '100%' }}>
+        <Space.Compact className={styles.inputBlock}>
           <TextArea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}

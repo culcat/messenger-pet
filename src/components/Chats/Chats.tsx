@@ -1,6 +1,7 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Avatar, Button, Divider, Input, List, Typography } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
+import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import { FC, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -73,10 +74,13 @@ const Chats: FC = () => {
                   <Link
                     to={`/chat/${item.sender.username !== currentUser ? item.sender.id : item.receiver.id}`}
                     className={styles.chatLink}
+                    key={item.id}
                   >
                     <List.Item
-                      className={`${styles.chatItem} ${selectedId === item.id ? styles.active : ''}`}
-                      onClick={() => setSelectedId(item.sender.id)}
+                      className={clsx(styles.chatItem, selectedId === item.id && styles.active)}
+                      onClick={() =>
+                        setSelectedId(item.sender.username !== currentUser ? item.sender.id : item.receiver.id)
+                      }
                     >
                       <List.Item.Meta
                         avatar={<Avatar>{item.sender.username[0]}</Avatar>}

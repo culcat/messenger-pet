@@ -5,7 +5,7 @@ import { TabsProps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
-import { useCookies } from 'react-cookie';
+import Cookies from 'js-cookie';
 
 import * as Tab from '../Tabs';
 import styles from './Settings.module.scss';
@@ -29,21 +29,25 @@ const items: TabsProps['items'] = [
 ];
 
 const Settings = () => {
-  const [Cookies] = useCookies(['username']);
-
+  const currentUser = Cookies.get('username') || '';
   return (
     <div className={styles.detailLayout}>
       <Content>
         <div className={styles.contactInfo}>
           <div className={styles.header}>
-            <div className={styles.avatar}>{Cookies.username[0]}</div>
+            <div className={styles.avatar}>{currentUser[0]}</div>
             <div>
               <Title level={3} style={{ marginBottom: 0 }}>
-                {Cookies.username}
+                {currentUser}
               </Title>
             </div>
             <div className={styles.headerActions}>
               <Button
+                onClick={() => {
+                  Cookies.remove('access_token');
+                  Cookies.remove('username');
+                  window.location.reload();
+                }}
                 shape="circle"
                 icon={
                   <span>

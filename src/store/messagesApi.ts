@@ -1,24 +1,17 @@
 import type { EntityState } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import Cookies from 'js-cookie';
-import { io, Socket } from 'socket.io-client';
 
-import type { Dialog, Message } from '@/types';
+import type { Dialog, Message } from '@/types/messages';
+import { getSocket } from '@/utils/socket';
 
 import { dialogsAdapter, messagesAdapter } from './messageSlice';
-
-let socket: Socket | null = null;
 
 export const messagesApi = createApi({
   reducerPath: 'messagesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000',
     prepareHeaders: (headers) => {
-      const token = Cookies.get('access_token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
+      return headers; // токен в сокете, тут можно убрать
     },
   }),
   endpoints: (build) => ({
@@ -26,12 +19,8 @@ export const messagesApi = createApi({
       queryFn: async () => {
         return { data: dialogsAdapter.getInitialState() };
       },
-      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved, getState }) {
-        const token = Cookies.get('access_token');
-        const socket = io('http://localhost:3000', {
-          auth: { token },
-          transports: ['websocket'],
-        });
+      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
+        const socket = getSocket();
 
         socket.emit('getDialogs');
 
@@ -42,21 +31,15 @@ export const messagesApi = createApi({
         });
 
         await cacheEntryRemoved;
-        socket.disconnect();
       },
     }),
 
     getConversation: build.query<EntityState<Message, number>, number>({
-      queryFn: async (userId, _queryApi, _extraOptions, fetchWithBQ) => {
-        // возвращаем пустой стейт сразу
+      queryFn: async () => {
         return { data: messagesAdapter.getInitialState() };
       },
       async onCacheEntryAdded(userId, { updateCachedData, cacheEntryRemoved }) {
-        const token = Cookies.get('access_token');
-        const socket = io('http://localhost:3000', {
-          auth: { token },
-          transports: ['websocket'],
-        });
+        const socket = getSocket();
 
         socket.emit('getConversation', { userId });
 
@@ -73,19 +56,12 @@ export const messagesApi = createApi({
         });
 
         await cacheEntryRemoved;
-        socket.disconnect();
       },
     }),
 
     sendMessage: build.mutation<void, { text: string; receiverId: number }>({
-      queryFn: async ({ text, receiverId }, { getState }) => {
-        const token = Cookies.get('access_token');
-        if (!socket) {
-          socket = io('http://localhost:3000', {
-            auth: { token },
-            transports: ['websocket'],
-          });
-        }
+      queryFn: async ({ text, receiverId }) => {
+        const socket = getSocket();
         socket.emit('send_message', { text, receiverId });
         return { data: undefined };
       },

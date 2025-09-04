@@ -2,16 +2,31 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Avatar, Button, Flex, Space } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
+import Cookies from 'js-cookie';
 import { FC } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'react-router';
 
-import { ChatItem } from '@/types/chat';
+import { Message } from '@/types/messages';
 
 import styles from './ChatHeader.module.scss';
 
-export const ChatHeader: FC = () => {
+interface HeaderProps {
+  userName: Message[];
+}
+
+export const ChatHeader: FC<HeaderProps> = ({ userName }) => {
+  const currentUser = Cookies.get('username');
   const isMobile = useMediaQuery({ maxWidth: 600 });
+
+  const dialog = userName?.[0];
+
+  if (!dialog) {
+    return <div>Загрузка...</div>;
+  }
+
+  const companionName = dialog.sender.username === currentUser ? dialog.receiver.username : dialog.sender.username;
+
   return (
     <div className={styles.headerWrapper}>
       <Content className={styles.headerContent}>
@@ -23,9 +38,11 @@ export const ChatHeader: FC = () => {
               </Avatar>
             </Link>
           )}
-          <Avatar size={48}></Avatar>
+          <Avatar size={48}>{companionName[0]}</Avatar>
           <div>
-            <Title level={4} className={styles.chatTitle}></Title>
+            <Title level={4} className={styles.chatTitle}>
+              {companionName}
+            </Title>
           </div>
         </Flex>
       </Content>
