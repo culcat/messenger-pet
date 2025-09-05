@@ -5,6 +5,7 @@ import Star from '@assets/Star.svg?react';
 import UserMultiple from '@assets/User--multiple.svg?react';
 import Settings from '@components/Settings/Settings';
 import { Layout, Menu } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
@@ -81,7 +82,7 @@ const SideBar: React.FC = () => {
   }
 
   return (
-    <Layout style={{ height: '100%' }}>
+    <Layout className={styles.layout}>
       <Sider className={styles.sider} collapsed={false}>
         <div className={styles.menuBlock}>
           <Menu
@@ -110,8 +111,8 @@ const SideBar: React.FC = () => {
           />
         </div>
       </Sider>
-      <Layout>
-        <div className={styles.content}>{renderContent()}</div>
+      <Layout className={styles.layout}>
+        <Content className={styles.content}>{renderContent()}</Content>
       </Layout>
     </Layout>
   );

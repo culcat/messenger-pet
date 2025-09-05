@@ -106,19 +106,12 @@ const ChatDetail: FC = () => {
           />
           <div ref={messagesEndRef} />
         </div>
-
-        <Space.Compact className={styles.inputBlock}>
-          <TextArea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            rows={2}
-            placeholder="Type here..."
-          />
-          <Button type="primary" onClick={handleSend} icon={<ActionButton />} />
-        </Space.Compact>
-      </div>
-
-      {isMobile && <Divider className={styles.divider} />}
+      </div>{' '}
+      <Space.Compact className={styles.inputBlock}>
+        <Input value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Type here..." />
+        <Button type="primary" onClick={handleSend} icon={<ActionButton />} />
+      </Space.Compact>
+      {/* {isMobile && <Divider className={styles.divider} />} */}
     </div>
   );
 };

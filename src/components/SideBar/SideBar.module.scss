@@ -82,7 +82,7 @@
   flex: 1;
   overflow-y: auto;
   background: #fff;
-  // margin-bottom: 35px;
+  margin-bottom: 35px;
 
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.04);
 }
@@ -120,4 +120,15 @@
 .mobileNavBtn:disabled {
   opacity: 0.3;
   cursor: default;
+}
+
+.content {
+  overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.layout {
+  height: 100%;
 }

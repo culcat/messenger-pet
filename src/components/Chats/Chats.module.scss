@@ -12,20 +12,20 @@
 
 .wrapper {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background: var(--background);
 
   @include mobile {
     flex-direction: column;
-    height: auto;
+    height: 100%;
 
     padding: 0;
   }
 }
 
 .chats {
-  width: 350px;
+  // width: 350px;
   background: var(--shape);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
