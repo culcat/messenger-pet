@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Avatar, Button, Flex, Space, Spin } from 'antd';
+import { Avatar, Button, Divider, Flex, Space, Spin } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import Cookies from 'js-cookie';
