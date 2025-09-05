@@ -42,7 +42,7 @@ export const Contacts = () => {
           />
         </div>
       </div>
-      {!isMobile ? <ContactDetail id={selectedId} /> : <></>}
+      {!isMobile && <ContactDetail id={selectedId} />}{' '}
     </div>
   );
 };

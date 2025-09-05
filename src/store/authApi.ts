@@ -2,18 +2,18 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { CheckTokenRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest, User } from '@/types';
 
-import { baseQueryWithReauth } from './baseQuery';
+import { axiosBaseQuery } from './axiosBaseQuery';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: baseQueryWithReauth,
+  baseQuery: axiosBaseQuery({ baseUrl: 'http://localhost:3000' }), // явно передаем baseUrl
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
     register: builder.mutation<LoginResponse, RegisterRequest>({
       query: (body) => ({
         url: '/auth/register',
         method: 'POST',
-        body,
+        data: body, // используем data вместо body для axios
       }),
       invalidatesTags: ['Auth'],
     }),
@@ -21,7 +21,7 @@ export const authApi = createApi({
       query: (body) => ({
         url: '/auth/login',
         method: 'POST',
-        body,
+        data: body, // используем data вместо body для axios
       }),
       invalidatesTags: ['Auth'],
     }),
@@ -29,14 +29,14 @@ export const authApi = createApi({
       query: (body) => ({
         url: '/auth/check',
         method: 'POST',
-        body,
+        data: body, // используем data вместо body для axios
       }),
     }),
     refreshToken: builder.mutation<RefreshTokenResponse, { refreshToken: string }>({
       query: (body) => ({
         url: '/auth/refresh',
         method: 'POST',
-        body,
+        data: body, // используем data вместо body для axios
       }),
     }),
     logout: builder.mutation<void, void>({

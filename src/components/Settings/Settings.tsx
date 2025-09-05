@@ -7,24 +7,20 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import Cookies from 'js-cookie';
 
-import * as Tab from '../Tabs';
+import { AccountTab, GeneralTab } from '@/components/Tabs';
+
 import styles from './Settings.module.scss';
 
 const items: TabsProps['items'] = [
   {
     key: '1',
     label: 'General',
-    children: <Tab.GeneralTab />,
+    children: <GeneralTab />,
   },
   {
     key: '2',
     label: 'Account',
-    children: <Tab.AccountTab />,
-  },
-  {
-    key: '4',
-    label: 'Notification',
-    children: <Tab.NotificationTab />,
+    children: <AccountTab />,
   },
 ];
 
