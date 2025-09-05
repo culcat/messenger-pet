@@ -4,18 +4,16 @@ import Title from 'antd/es/typography/Title';
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { Link, Outlet } from 'react-router-dom';
 
 import { useGetContactsQuery } from '@/store/contactApi';
 
-import { RootState } from '../../store';
-import ContactDetail from '../ContactDetail/ContactDetail';
 import styles from './Contacts.module.scss';
 export const Contacts = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const currentUser = Cookies.get('username');
   const { data: contacts } = useGetContactsQuery(String(currentUser));
-  console.log(contacts);
 
   return (
     <div className={styles.wrapper}>
@@ -36,17 +34,16 @@ export const Contacts = () => {
             itemLayout="horizontal"
             dataSource={contacts}
             renderItem={(item) => (
-              <List.Item
-                className={`${styles.contactsItem} ${selectedId === item.id ? styles.active : ''}`}
-                onClick={() => setSelectedId(item.id)}
-              >
-                <List.Item.Meta avatar={<Avatar>{item.username[0]}</Avatar>} title={item.username} />
-              </List.Item>
+              <Link to={`/chat/${item.id}`}>
+                <List.Item className={`${styles.contactsItem} ${selectedId === item.id ? styles.active : ''}`}>
+                  <List.Item.Meta avatar={<Avatar>{item.username[0]}</Avatar>} title={item.username} />
+                </List.Item>
+              </Link>
             )}
           />
         </div>
       </div>
-      {/* {!isMobile && <ContactDetail id={selectedId} />}{' '} */}
+      {/* {(!isMobile && <Outlet />) || (isMobile && selectedId && <Outlet />)} */}
     </div>
   );
 };
