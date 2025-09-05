@@ -1,50 +1,64 @@
-import { Avatar, Button, Flex, Space } from "antd";
-import { Content } from "antd/es/layout/layout";
-import Title from "antd/es/typography/Title";
-import React from "react";
-import { ChatItem } from "@/types/chat";
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Avatar, Button, Divider, Flex, Space, Spin } from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import Title from 'antd/es/typography/Title';
+import Cookies from 'js-cookie';
+import { FC } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { Link } from 'react-router';
 
-interface ChatHeaderProps {
-  chat: ChatItem;
+import { Message } from '@/types/messages';
+
+import styles from './ChatHeader.module.scss';
+
+interface HeaderProps {
+  userName: Message[];
 }
-export const ChatHeader = (chat: ChatHeaderProps) => {
+
+export const ChatHeader: FC<HeaderProps> = ({ userName }) => {
+  const currentUser = Cookies.get('username');
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+
+  const dialog = userName?.[0];
+
+  if (!dialog) {
+    return (
+      <div className={styles.headerWrapper}>
+        <Content className={styles.headerContent}>
+          <Flex align="center" justify="center" gap={16}>
+            {isMobile && (
+              <Link to="/chat" reloadDocument>
+                <Avatar size={40}>
+                  <ArrowLeftOutlined />
+                </Avatar>
+              </Link>
+            )}
+            <Spin size="large" />
+          </Flex>
+        </Content>
+      </div>
+    );
+  }
+
+  const companionName = dialog.sender.username === currentUser ? dialog.receiver.username : dialog.sender.username;
+
   return (
-    <div
-      style={{
-        borderBottom: "1px solid #ccc",
-        position: "sticky",
-        top: 0,
-        zIndex: 1,
-      }}
-    >
-      {" "}
-      <Content
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "16px 24px",
-          background: "#fff",
-        }}
-      >
-        <Flex align="center" gap="middle">
-          <Avatar size={48}>{chat.chat.name[0]}</Avatar>
+    <div className={styles.headerWrapper}>
+      <Content className={styles.headerContent}>
+        <Flex align="center" gap={16}>
+          {isMobile && (
+            <Link to="/chat" reloadDocument>
+              <Avatar size={40}>
+                <ArrowLeftOutlined />
+              </Avatar>
+            </Link>
+          )}
+          <Avatar size={48}>{companionName[0]}</Avatar>
           <div>
-            <Title level={4} style={{ margin: 0 }}>
-              {chat.chat.name}
+            <Title level={4} className={styles.chatTitle}>
+              {companionName}
             </Title>
           </div>
-        </Flex>
-        <Flex align="center" gap="middle">
-          <Space size="middle">
-            <Button
-              style={{ border: "none", borderRadius: "20px" }}
-              color="default"
-              variant="solid"
-            >
-              View profile
-            </Button>
-          </Space>
         </Flex>
       </Content>
     </div>

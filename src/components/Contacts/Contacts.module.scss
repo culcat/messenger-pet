@@ -1,8 +1,7 @@
 .wrapper {
   display: flex;
-  height: 100vh;
-  width: auto;
-  background: #fff;
+  height: 100%;
+  background: var(--shape);
 }
 
 .contacts {
@@ -20,6 +19,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 20px;
+  // background-color: $red;
 
   .ant-input {
     flex: 1;
@@ -47,10 +47,10 @@
   border-radius: 8px;
 
   &:hover {
-    background: #fafafa;
+    background: var(--background);
   }
 }
 
 .active {
-  background: #e6f7ff !important;
+  background: var(--background);
 }

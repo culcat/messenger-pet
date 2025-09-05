@@ -1,148 +1,118 @@
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Input,
-  Layout,
-  List,
-  Space,
-} from "antd";
-import { Content } from "antd/es/layout/layout";
-import Paragraph from "antd/es/typography/Paragraph";
-import Title from "antd/es/typography/Title";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
-import { DateSend } from "@/components/DateSend/DateSend";
-import { ChatHeader } from "../ChatHeader";
-import ActionButton from "@assets/_Action button.svg?react";
-import { useEffect, useRef } from "react";
+import ActionButton from '@assets/_Action button.svg?react';
+import { Avatar, Button, Divider, Input, List, Space, Spin } from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
+import clsx from 'clsx';
+import Cookies from 'js-cookie';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useParams } from 'react-router-dom';
 
-interface ChatDetailProps {
-  id: number | null;
-}
+import { ChatHeader } from '@/components/ChatHeader';
+import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
+import { useGetConversationQuery, useSendMessageMutation } from '@/store/messagesApi';
+import { messagesAdapter } from '@/store/messageSlice';
+import { Message } from '@/types/messages';
 
-const ChatDetail = (id: ChatDetailProps) => {
-  const chats = useSelector((state: RootState) => state.chats);
+import styles from './ChatDetail.module.scss';
 
-  const chat = chats.find((c) => c.id === id.id);
+const { TextArea } = Input;
 
-  const scrollToRef = useRef<HTMLDivElement>(null);
+const ChatDetail: FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const userId = id ? Number(id) : null;
+
+  const currentUser = Cookies.get('username') || '';
+
+  const {
+    data: conversation,
+    isLoading,
+    isError,
+  } = useGetConversationQuery(Number(userId), {
+    skip: !userId, // ← Важно: пропускаем запрос если userId невалидный
+    refetchOnMountOrArgChange: true,
+  });
+
+  const [dataMes, setDataMes] = useState<Message[]>([]);
+  const [sendMessage] = useSendMessageMutation();
+  const [newMessage, setNewMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+
+  const messagesArray = useMemo(() => {
+    return conversation ? messagesAdapter.getSelectors().selectAll(conversation) : [];
+  }, [conversation]);
+
+  // Эффект для скролла и очистки сообщения при смене чата
+  useEffect(() => {
+    setNewMessage('');
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [id]);
 
   useEffect(() => {
-    if (scrollToRef.current) {
-      scrollToRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [chat?.messages]);
-  return (
-    <>
-      <Layout style={{ borderLeft: "1px solid #ccc", overflowY: "auto" }}>
-        {id.id === null && <MessengerAbout />}
-        {id.id !== null && chat && (
-          <div>
-            <ChatHeader chat={chat} />
-            <Layout
-              style={{
-                padding: "16px 24px",
-                backgroundColor: "#fff",
-                overflow: "auto",
-                minHeight: "85vh",
-              }}
-            >
-              <List
-                itemLayout="vertical"
-                dataSource={chat.messages}
-                renderItem={(item) => (
-                  <List.Item
-                    style={{
-                      borderBottom: "none",
-                    }}
-                  >
-                    {item.sender === "You" ? (
-                      <Flex
-                        gap="middle"
-                        justify="flex-end"
-                        align="flex-start"
-                        style={{ width: "100%", height: "100%" }}
-                      >
-                        <Flex vertical={true}>
-                          <Flex gap="middle">
-                            <Title level={5}>{item.sender}</Title>
-                            <Paragraph>
-                              <DateSend dateSend={item.time} />
-                            </Paragraph>
-                          </Flex>
-                          <Paragraph
-                            style={{
-                              margin: "0px 0px 0px 0px",
-                              backgroundColor: "#e6f0fa",
-                              padding: "10px 10px 10px 10px",
-                              borderRadius: 10,
-                            }}
-                          >
-                            {item.message}
-                          </Paragraph>
-                        </Flex>
-                      </Flex>
-                    ) : (
-                      <Flex
-                        gap="middle"
-                        style={{ width: "100%", height: "100%" }}
-                      >
-                        <Avatar
-                          style={{
-                            backgroundColor: "#e6f0fa",
-                            color: "#3a7afe",
-                          }}
-                        >
-                          {item.sender[0]}
-                        </Avatar>{" "}
-                        <Flex vertical={true}>
-                          <Flex gap="middle">
-                            <Title level={5}>{item.sender}</Title>
-                            <Paragraph>
-                              <DateSend dateSend={item.time} />
-                            </Paragraph>
-                          </Flex>
-                          <Paragraph
-                            style={{
-                              margin: "0px 0px 0px 0px",
-                              backgroundColor: "#d8e2e7ff",
-                              padding: "10px 10px 10px 10px",
-                              borderRadius: 10,
-                            }}
-                          >
-                            {item.message}
-                          </Paragraph>
-                        </Flex>
-                      </Flex>
-                    )}
-                  </List.Item>
-                )}
-              />
-              <div ref={scrollToRef}></div>
-            </Layout>
+    if (!messagesArray) return;
+    setDataMes(messagesArray);
+  }, [messagesArray]);
 
-            <Space.Compact
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "sticky",
-                bottom: 0,
-                padding: "16px 24px",
-                background: "#fff",
-              }}
-            >
-              <Input placeholder="Type here..." />
-              <Button variant="text" icon={<ActionButton />} />
-            </Space.Compact>
-          </div>
-        )}
-      </Layout>
-    </>
+  const handleSend = async () => {
+    if (!newMessage.trim() || !userId) return;
+    await sendMessage({ text: newMessage, receiverId: userId });
+    setNewMessage('');
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  if (!id) return <MessengerAbout />;
+
+  if (userId === null || isNaN(userId)) return <div>Неверный ID чата</div>;
+
+  if (isLoading) return <Spin size="large" />;
+
+  if (isError) return <div>Ошибка при загрузке сообщений</div>;
+
+  return (
+    <div key={id} className={styles.chatLayout}>
+      <div className={styles.chatWrapper}>
+        <ChatHeader userName={messagesArray} />
+        <Divider className={styles.divider} />
+
+        <div className={styles.messagesLayout}>
+          <List
+            dataSource={messagesArray}
+            renderItem={(item) => {
+              const isCurrentUser = item.sender.username === currentUser;
+
+              return (
+                <div
+                  className={clsx(styles.messageRow, {
+                    [styles.right]: isCurrentUser,
+                    [styles.left]: !isCurrentUser,
+                  })}
+                >
+                  {!isCurrentUser && <Avatar>{item.sender.username[0]}</Avatar>}
+
+                  <div
+                    className={clsx({
+                      [styles.messageBubbleYou]: isCurrentUser,
+                      [styles.messageBubbleOther]: !isCurrentUser,
+                    })}
+                  >
+                    {!isCurrentUser && <div style={{ fontWeight: 600, marginBottom: 4 }}>{item.sender.username}</div>}
+                    <Paragraph style={{ margin: 0 }}>{item.text}</Paragraph>
+                    <div className={styles.messageMeta}>{new Date(item.createdAt).toLocaleString()}</div>
+                  </div>
+                </div>
+              );
+            }}
+          />
+          <div ref={messagesEndRef} />
+        </div>
+      </div>{' '}
+      <Space.Compact className={styles.inputBlock}>
+        <Input value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Type here..." />
+        <Button type="primary" onClick={handleSend} icon={<ActionButton />} />
+      </Space.Compact>
+      {/* {isMobile && <Divider className={styles.divider} />} */}
+    </div>
   );
 };
 

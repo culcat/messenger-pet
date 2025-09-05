@@ -22,8 +22,8 @@
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  background: rgba(216, 216, 216, 0.82);
-  color: #fff;
+  background: var(--line);
+  color: var(--shape);
   font-size: 28px;
   font-weight: 600;
   display: flex;
@@ -41,6 +41,9 @@
   .ant-tabs-nav {
     margin-bottom: 16px;
   }
+  .ant-tabs-tab {
+    padding: 8px 12px;
+  }
 }
 
 .infoBlock {
@@ -51,21 +54,11 @@
   font-size: 16px;
 
   b {
-    color: #7a869a;
+    color: var(--text-body);
     font-weight: 500;
     font-size: 14px;
     margin-bottom: 2px;
     display: block;
-  }
-
-  a {
-    color: #3a7afe;
-    font-size: 14px;
-    margin-top: 8px;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 
@@ -79,12 +72,12 @@
 .detailTitle {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-title);
 }
 
 .detailSubtitle {
   font-size: 16px;
-  color: #7a869a;
+  color: var(--text-body);
 }
 
 .detailContent {
@@ -93,7 +86,7 @@
 
 .detailFooter {
   padding: 16px 24px;
-  border-top: 1px solid #e6ebf1;
+  border-top: 1px solid var(--line);
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -107,24 +100,4 @@
   text-align: center;
   cursor: pointer;
   transition: background 0.3s;
-
-  &.primary {
-    background: #3a7afe;
-    color: #fff;
-    border: none;
-
-    &:hover {
-      background: #2c6bbf;
-    }
-  }
-
-  &.secondary {
-    background: #f0f4f8;
-    color: #333;
-    border: 1px solid #d1d9e1;
-
-    &:hover {
-      background: #e6ebf1;
-    }
-  }
 }

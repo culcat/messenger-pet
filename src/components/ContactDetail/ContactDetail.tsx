@@ -1,17 +1,19 @@
-import { Layout, Tabs, Button, Divider } from "antd";
+import { Button, Divider,Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
-import Logo from "@assets/Logo.svg?react";
+import { FC } from "react";
 import { useSelector } from "react-redux";
+
+import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
+
 import { RootState } from "../../store";
 import styles from "./ContactDetail.module.scss";
-import { MessengerAbout } from "@/components/MessengerAbout/MessengerAbout";
 interface ChatDetailProps {
   id: number | null;
 }
 
-const ContactDetail = ({ id }: ChatDetailProps) => {
+const ContactDetail: FC<ChatDetailProps> = ({id}) => {
   const contacts = useSelector((state: RootState) => state.contacts);
   const contact = contacts.find((c) => c.id === id);
 

@@ -1,17 +1,20 @@
-import { Layout } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { Input, Typography, Divider, List, Avatar } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import styles from "./Contacts.module.scss";
-import React from "react";
-import Title from "antd/es/typography/Title";
-import Text from "antd/es/typography/Text";
-import ContactDetail from "../ContactDetail/ContactDetail";
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Avatar, Divider, Input, List } from 'antd';
+import Title from 'antd/es/typography/Title';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { Link, Outlet } from 'react-router-dom';
+
+import { useGetContactsQuery } from '@/store/contactApi';
+
+import styles from './Contacts.module.scss';
 export const Contacts = () => {
-  const [selectedId, setSelectedId] = React.useState<number | null>(null);
-  const contacts = useSelector((state: RootState) => state.contacts);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+  const currentUser = Cookies.get('username');
+  const { data: contacts } = useGetContactsQuery(String(currentUser));
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.contacts}>
@@ -20,11 +23,7 @@ export const Contacts = () => {
         </Title>
 
         <div className={styles.search}>
-          <Input
-            placeholder="Search here..."
-            prefix={<SearchOutlined />}
-            allowClear
-          />
+          <Input placeholder="Search here..." prefix={<SearchOutlined />} allowClear />
           <PlusOutlined className={styles.addIcon} />
         </div>
 
@@ -35,23 +34,16 @@ export const Contacts = () => {
             itemLayout="horizontal"
             dataSource={contacts}
             renderItem={(item) => (
-              <List.Item
-                className={`${styles.contactsItem} ${
-                  selectedId === item.id ? styles.active : ""
-                }`}
-                onClick={() => setSelectedId(item.id)}
-              >
-                <List.Item.Meta
-                  avatar={<Avatar>{item.name[0]}</Avatar>}
-                  title={item.name}
-                  description={item.number}
-                />
-              </List.Item>
+              <Link to={`/chat/${item.id}`}>
+                <List.Item className={`${styles.contactsItem} ${selectedId === item.id ? styles.active : ''}`}>
+                  <List.Item.Meta avatar={<Avatar>{item.username[0]}</Avatar>} title={item.username} />
+                </List.Item>
+              </Link>
             )}
           />
         </div>
       </div>
-      <ContactDetail id={selectedId} />
+      {/* {(!isMobile && <Outlet />) || (isMobile && selectedId && <Outlet />)} */}
     </div>
   );
 };

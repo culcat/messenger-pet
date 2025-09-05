@@ -1,8 +1,4 @@
-export interface ContactItem {
+export interface Contact {
   id: number;
-  name: string;
-  number: string;
-  status?: string;
-  avatar?: string;
-  email?: string;
+  username: string;
 }

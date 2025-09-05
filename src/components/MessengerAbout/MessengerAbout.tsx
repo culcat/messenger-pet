@@ -1,7 +1,8 @@
+import Logo from "@assets/Logo.svg?react";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
+
 import styles from "./MessengerAbout.module.scss";
-import Logo from "@assets/Logo.svg?react";
 export const MessengerAbout = () => {
   return (
     <div className={styles.emptyState}>
