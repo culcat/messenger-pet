@@ -77,7 +77,10 @@ const Chats: FC = () => {
                     key={item.id}
                   >
                     <List.Item
-                      className={clsx(styles.chatItem, selectedId === item.id && styles.active)}
+                      className={clsx(styles.chatItem, {
+                        [styles.active]:
+                          selectedId === (item.sender.username !== currentUser ? item.sender.id : item.receiver.id),
+                      })}
                       onClick={() =>
                         setSelectedId(item.sender.username !== currentUser ? item.sender.id : item.receiver.id)
                       }

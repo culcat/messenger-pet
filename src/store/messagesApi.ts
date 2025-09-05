@@ -33,22 +33,25 @@ export const messagesApi = createApi({
         await cacheEntryRemoved;
       },
     }),
-
     getConversation: build.query<EntityState<Message, number>, number>({
-      queryFn: async () => {
-        return { data: messagesAdapter.getInitialState() };
-      },
-      async onCacheEntryAdded(userId, { updateCachedData, cacheEntryRemoved }) {
+      queryFn: async (userId) => {
         const socket = getSocket();
 
-        socket.emit('getConversation', { userId });
+        return new Promise<{ data: EntityState<Message, number> }>((resolve) => {
+          socket.emit('getConversation', { userId });
 
-        socket.on('conversationHistory', (messages: Message[]) => {
-          updateCachedData((draft) => {
-            messagesAdapter.setAll(draft, messages);
+          socket.once('conversationHistory', (messages: Message[]) => {
+            resolve({
+              data: messagesAdapter.upsertMany(messagesAdapter.getInitialState(), messages) as EntityState<
+                Message,
+                number
+              >,
+            });
           });
         });
-
+      },
+      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
+        const socket = getSocket();
         socket.on('new_message', (msg: Message) => {
           updateCachedData((draft) => {
             messagesAdapter.upsertOne(draft, msg);

@@ -1,10 +1,9 @@
 import ActionButton from '@assets/_Action button.svg?react';
-import { Avatar, Button, Divider, Flex, Input, List, Space } from 'antd';
+import { Avatar, Button, Divider, Input, List, Space, Spin } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import Title from 'antd/es/typography/Title';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
-import { Component, FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useParams } from 'react-router-dom';
 
@@ -12,6 +11,7 @@ import { ChatHeader } from '@/components/ChatHeader';
 import { MessengerAbout } from '@/components/MessengerAbout/MessengerAbout';
 import { useGetConversationQuery, useSendMessageMutation } from '@/store/messagesApi';
 import { messagesAdapter } from '@/store/messageSlice';
+import { Message } from '@/types/messages';
 
 import styles from './ChatDetail.module.scss';
 
@@ -23,30 +23,50 @@ const ChatDetail: FC = () => {
 
   const currentUser = Cookies.get('username') || '';
 
-  const { data: conversation, isLoading, isError } = useGetConversationQuery(Number(userId));
+  const {
+    data: conversation,
+    isLoading,
+    isError,
+  } = useGetConversationQuery(Number(userId), {
+    skip: !userId, // ← Важно: пропускаем запрос если userId невалидный
+    refetchOnMountOrArgChange: true,
+  });
 
+  const [dataMes, setDataMes] = useState<Message[]>([]);
   const [sendMessage] = useSendMessageMutation();
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const isMobile = useMediaQuery({ maxWidth: 600 });
 
-  // Скролл вниз при изменении сообщений
-  const messagesArray = conversation ? messagesAdapter.getSelectors().selectAll(conversation) : [];
+  const messagesArray = useMemo(() => {
+    return conversation ? messagesAdapter.getSelectors().selectAll(conversation) : [];
+  }, [conversation]);
+
+  // Эффект для скролла и очистки сообщения при смене чата
   useEffect(() => {
     setNewMessage('');
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [id]);
 
+  useEffect(() => {
+    if (!messagesArray) return;
+    setDataMes(messagesArray);
+  }, [messagesArray]);
+
   const handleSend = async () => {
-    if (!newMessage.trim()) return;
-    await sendMessage({ text: newMessage, receiverId: Number(userId) });
+    if (!newMessage.trim() || !userId) return;
+    await sendMessage({ text: newMessage, receiverId: userId });
     setNewMessage('');
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (id == null || undefined) return <MessengerAbout />;
-  if (isLoading) return <div>Загрузка сообщений...</div>;
+  if (!id) return <MessengerAbout />;
+
+  if (userId === null || isNaN(userId)) return <div>Неверный ID чата</div>;
+
+  if (isLoading) return <Spin size="large" />;
+
   if (isError) return <div>Ошибка при загрузке сообщений</div>;
 
   return (

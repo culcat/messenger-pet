@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Avatar, Button, Flex, Space } from 'antd';
+import { Avatar, Button, Flex, Space, Spin } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import Cookies from 'js-cookie';
@@ -22,7 +22,22 @@ export const ChatHeader: FC<HeaderProps> = ({ userName }) => {
   const dialog = userName?.[0];
 
   if (!dialog) {
-    return <div>Загрузка...</div>;
+    return (
+      <div className={styles.headerWrapper}>
+        <Content className={styles.headerContent}>
+          <Flex align="center" justify="center" gap={16}>
+            {isMobile && (
+              <Link to="/chat" reloadDocument>
+                <Avatar size={40}>
+                  <ArrowLeftOutlined />
+                </Avatar>
+              </Link>
+            )}
+            <Spin size="large" />
+          </Flex>
+        </Content>
+      </div>
+    );
   }
 
   const companionName = dialog.sender.username === currentUser ? dialog.receiver.username : dialog.sender.username;
