@@ -2,12 +2,10 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { authApi } from './authApi';
 import { contactApi } from './contactApi';
-import folderReducer from './folderSlice';
 import { messagesApi } from './messagesApi';
 
 export const store = configureStore({
   reducer: {
-    folders: folderReducer,
     [authApi.reducerPath]: authApi.reducer,
     [messagesApi.reducerPath]: messagesApi.reducer,
     [contactApi.reducerPath]: contactApi.reducer,

@@ -10,7 +10,6 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useGetDialogsQuery } from '@/store/messagesApi';
 import type { Dialog } from '@/types/messages';
 
-import { Folders } from '../Folders/Folders';
 import styles from './Chats.module.scss';
 
 const { Title, Text } = Typography;
@@ -18,7 +17,6 @@ const { Title, Text } = Typography;
 const Chats: FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchText, setSearchText] = useState('');
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isCollapsed, setCollapsed] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
@@ -55,8 +53,6 @@ const Chats: FC = () => {
 
           <Divider />
           <div className={styles.section}>
-            <Folders selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder} />
-
             <div className={styles.sectionHeader}>
               <Text strong>Chat</Text>
               <Button
