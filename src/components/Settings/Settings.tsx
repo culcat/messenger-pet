@@ -1,26 +1,49 @@
-import { Button, Divider, Layout } from "antd";
-import styles from "./Settings.module.scss";
-import React from "react";
-import { Content } from "antd/es/layout/layout";
-import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/typography/Paragraph";
-import Logout from "@assets/Icon trailing.svg?react";
+import Logout from '@assets/Icon trailing.svg?react';
+import { Button, Divider } from 'antd';
+import { Tabs } from 'antd';
+import { TabsProps } from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import Paragraph from 'antd/es/typography/Paragraph';
+import Title from 'antd/es/typography/Title';
+import Cookies from 'js-cookie';
+
+import { AccountTab, GeneralTab } from '@/components/Tabs';
+
+import styles from './Settings.module.scss';
+
+const items: TabsProps['items'] = [
+  {
+    key: '1',
+    label: 'General',
+    children: <GeneralTab />,
+  },
+  {
+    key: '2',
+    label: 'Account',
+    children: <AccountTab />,
+  },
+];
 
 const Settings = () => {
+  const currentUser = Cookies.get('username') || '';
   return (
-    <Layout className={styles.detailLayout}>
+    <div className={styles.detailLayout}>
       <Content>
         <div className={styles.contactInfo}>
           <div className={styles.header}>
-            <div className={styles.avatar}>u</div>
+            <div className={styles.avatar}>{currentUser[0]}</div>
             <div>
               <Title level={3} style={{ marginBottom: 0 }}>
-                You
+                {currentUser}
               </Title>
-              <Paragraph style={{ marginBottom: 0 }}>899999999</Paragraph>
             </div>
             <div className={styles.headerActions}>
               <Button
+                onClick={() => {
+                  Cookies.remove('access_token');
+                  Cookies.remove('username');
+                  window.location.reload();
+                }}
                 shape="circle"
                 icon={
                   <span>
@@ -32,12 +55,10 @@ const Settings = () => {
             </div>
           </div>
           <Divider />
-          <div className={styles.overview}>
-            <Title level={5}>General</Title>
-          </div>
+          <Tabs items={items} className={styles.tabs} />
         </div>
       </Content>
-    </Layout>
+    </div>
   );
 };
 

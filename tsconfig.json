@@ -17,6 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
 
     "baseUrl": ".",
     "paths": {
@@ -26,5 +27,5 @@
     }
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+"references": [{ "path": "./tsconfig.node.json" }]
 }

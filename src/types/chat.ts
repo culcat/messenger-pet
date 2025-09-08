@@ -4,6 +4,7 @@ export interface ChatItem {
   messages: messages[];
   avatar?: string;
   group?: boolean;
+  folder?: string;
 }
 
 export interface messages {

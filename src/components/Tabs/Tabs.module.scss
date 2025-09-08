@@ -1,0 +1,33 @@
+.ant-switch-checked {
+    background-color: red;
+ }
+ .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red;
+    border-color: red;
+  }
+.infoBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 16px 0;
+    font-size: 16px;
+  
+    b {
+      color: #7a869a;
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 2px;
+      display: block;
+    }
+  
+    a {
+      color: #3a7afe;
+      font-size: 14px;
+      margin-top: 8px;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+

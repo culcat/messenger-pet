@@ -1,17 +1,14 @@
-import { LoginTittle } from "@/components/LoginTittle";
-import { LoginForm } from "@/components/LoginForm";
-import { Flex } from "antd";
-export const Login = () => {
+import { Flex } from 'antd';
+
+import { LoginForm } from '@/components/LoginForm';
+import { LoginTittle } from '@/components/LoginTittle';
+export default function Login() {
   return (
-    <Flex
-      style={{ height: "100vh" }}
-      gap="middle"
-      justify="center"
-      align="center"
-      vertical
-    >
-      <LoginTittle />
-      <LoginForm />
-    </Flex>
+    <div>
+      <Flex gap={16} justify="center" align="center" style={{ height: '100%' }} vertical>
+        <LoginTittle />
+        <LoginForm />
+      </Flex>
+    </div>
   );
-};
+}
