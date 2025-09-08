@@ -20,8 +20,7 @@ const Chats: FC = () => {
   const [isCollapsed, setCollapsed] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
-  const dialogsArray = dialogs ? dialogs.ids.map((id) => dialogs.entities[id]!) : [];
-  if (isLoading) return <div>Loading...</div>;
+  const dialogsArray = dialogs ?? []; // dialogs — уже массив  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
   if (!dialogs) return <div>Not Found</div>;
   const currentUser = Cookies.get('username');

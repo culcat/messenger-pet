@@ -1,75 +1,110 @@
-import type { EntityState } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import Cookies from 'js-cookie';
 
 import type { Dialog, Message } from '@/types/messages';
 import { getSocket } from '@/utils/socket';
-
-import { dialogsAdapter, messagesAdapter } from './messageSlice';
 
 export const messagesApi = createApi({
   reducerPath: 'messagesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000',
     prepareHeaders: (headers) => {
-      return headers; // токен в сокете, тут можно убрать
+      const token = Cookies.get('access_token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
     },
   }),
+  tagTypes: ['Conversation', 'Dialogs'],
   endpoints: (build) => ({
-    getDialogs: build.query<EntityState<Dialog, number>, void>({
-      queryFn: async () => {
-        return { data: dialogsAdapter.getInitialState() };
+    // Получение сообщений чата
+    getConversationRest: build.query<
+      {
+        messages: Message[];
+        pagination: { total: number; page: number; limit: number; totalPages: number };
       },
-      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
-        const socket = getSocket();
-
-        socket.emit('getDialogs');
-
-        socket.on('dialogsList', (dialogs: Dialog[]) => {
-          updateCachedData((draft) => {
-            dialogsAdapter.setAll(draft, dialogs);
-          });
-        });
-
-        await cacheEntryRemoved;
+      { userId: number; page: number; limit: number }
+    >({
+      query: ({ userId, page = 1, limit = 20 }) => ({
+        url: '/messages/conversation',
+        method: 'POST',
+        body: { userId, page, limit },
+      }),
+      serializeQueryArgs: ({ queryArgs }) => queryArgs.userId,
+      merge: (currentCache, newCache, { arg }) => {
+        if (arg.page === 1) {
+          currentCache.messages = newCache.messages;
+        } else {
+          // добавляем только новые, которых ещё нет
+          const existingIds = new Set(currentCache.messages.map((m) => m.id));
+          const filtered = newCache.messages.filter((m) => !existingIds.has(m.id));
+          currentCache.messages.push(...filtered); // append в конец
+        }
+        currentCache.pagination = newCache.pagination;
       },
+      forceRefetch({ currentArg, previousArg }) {
+        // рефетч если поменялся userId или page
+        return currentArg?.userId !== previousArg?.userId || currentArg?.page !== previousArg?.page;
+      },
+      async onCacheEntryAdded({ userId }, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+        try {
+          await cacheDataLoaded;
+          const socket = getSocket();
+
+          const handler = (message: Message) => {
+            if (message.sender.id === userId || message.receiver.id === userId) {
+              updateCachedData((draft) => {
+                // чтобы не дублировать
+                if (!draft.messages.find((m) => m.id === message.id)) {
+                  draft.messages.push(message);
+                }
+              });
+            }
+          };
+
+          socket.on('new_message', handler);
+
+          await cacheEntryRemoved;
+          socket.off('new_message', handler);
+        } catch {}
+      },
+      providesTags: (result, error, { userId }) => [{ type: 'Conversation', id: userId }],
     }),
-    getConversation: build.query<EntityState<Message, number>, number>({
-      queryFn: async (userId) => {
-        const socket = getSocket();
 
-        return new Promise<{ data: EntityState<Message, number> }>((resolve) => {
-          socket.emit('getConversation', { userId });
-
-          socket.once('conversationHistory', (messages: Message[]) => {
-            resolve({
-              data: messagesAdapter.upsertMany(messagesAdapter.getInitialState(), messages) as EntityState<
-                Message,
-                number
-              >,
-            });
-          });
-        });
-      },
-      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
-        const socket = getSocket();
-        socket.on('new_message', (msg: Message) => {
-          updateCachedData((draft) => {
-            messagesAdapter.upsertOne(draft, msg);
-          });
-        });
-
-        await cacheEntryRemoved;
-      },
-    }),
-
+    // Отправка сообщения через сокет
     sendMessage: build.mutation<void, { text: string; receiverId: number }>({
       queryFn: async ({ text, receiverId }) => {
-        const socket = getSocket();
-        socket.emit('send_message', { text, receiverId });
-        return { data: undefined };
+        try {
+          const socket = getSocket();
+          socket.emit('send_message', { text, receiverId });
+          return { data: undefined };
+        } catch (error) {
+          return { error: error as any };
+        }
       },
+      invalidatesTags: (result, error, { receiverId }) => [{ type: 'Conversation', id: receiverId }],
+    }),
+
+    // Получение списка диалогов через сокет
+    getDialogs: build.query<Dialog[], void>({
+      queryFn: async () => ({ data: [] }), // изначально пустой массив
+      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
+        const socket = getSocket();
+
+        const handleDialogs = (dialogs: Dialog[]) => {
+          updateCachedData(() => dialogs);
+        };
+
+        socket.emit('getDialogs');
+        socket.on('dialogsList', handleDialogs);
+
+        await cacheEntryRemoved;
+        socket.off('dialogsList', handleDialogs);
+      },
+      providesTags: [{ type: 'Dialogs', id: 'LIST' }],
     }),
   }),
 });
 
-export const { useGetDialogsQuery, useGetConversationQuery, useSendMessageMutation } = messagesApi;
+export const { useGetConversationRestQuery, useSendMessageMutation, useGetDialogsQuery } = messagesApi;
