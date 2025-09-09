@@ -1,8 +1,8 @@
 import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import Cookies from 'js-cookie';
 
 import { RefreshTokenResponse } from '@/types/login';
 import { TokenService } from '@/utils/tokenService';
-
 export const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:3000',
   prepareHeaders: (headers) => {

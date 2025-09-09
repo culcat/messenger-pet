@@ -6,7 +6,7 @@ export interface Tokens {
 }
 
 export const TokenService = {
-  getAccessToken: (): string | undefined => Cookies.get('token'),
+  getAccessToken: (): string | undefined => Cookies.get('access_token'),
   getRefreshToken: (): string | undefined => Cookies.get('refreshToken'),
 
   setTokens: ({ accessToken, refreshToken }: Tokens): void => {

@@ -1,21 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import Cookies from 'js-cookie';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 import type { Dialog, Message } from '@/types/messages';
 import { getSocket } from '@/utils/socket';
 
+import { baseQuery } from './baseQuery';
+
 export const messagesApi = createApi({
   reducerPath: 'messagesApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000',
-    prepareHeaders: (headers) => {
-      const token = Cookies.get('access_token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQuery,
   tagTypes: ['Conversation', 'Dialogs'],
   endpoints: (build) => ({
     // Получение сообщений чата
@@ -24,52 +16,119 @@ export const messagesApi = createApi({
         messages: Message[];
         pagination: { total: number; page: number; limit: number; totalPages: number };
       },
-      { userId: number; page: number; limit: number }
+      { userId: number; page?: number; limit?: number }
     >({
       query: ({ userId, page = 1, limit = 20 }) => ({
         url: '/messages/conversation',
         method: 'POST',
         body: { userId, page, limit },
       }),
+
+      // кэш на уровне userId
       serializeQueryArgs: ({ queryArgs }) => queryArgs.userId,
-      merge: (currentCache, newCache, { arg }) => {
-        if (arg.page === 1) {
-          currentCache.messages = newCache.messages;
+
+      merge: (cache, incoming, { arg }) => {
+        const { page } = arg;
+        if (page === 1) {
+          cache.messages = incoming.messages;
         } else {
-          // добавляем только новые, которых ещё нет
-          const existingIds = new Set(currentCache.messages.map((m) => m.id));
-          const filtered = newCache.messages.filter((m) => !existingIds.has(m.id));
-          currentCache.messages.push(...filtered); // append в конец
+          const existingIds = new Set(cache.messages.map((m) => m.id));
+          cache.messages.push(...incoming.messages.filter((m) => !existingIds.has(m.id)));
         }
-        currentCache.pagination = newCache.pagination;
+        cache.pagination = incoming.pagination;
       },
-      forceRefetch({ currentArg, previousArg }) {
-        // рефетч если поменялся userId или page
-        return currentArg?.userId !== previousArg?.userId || currentArg?.page !== previousArg?.page;
-      },
+
+      forceRefetch: ({ currentArg, previousArg }) =>
+        currentArg?.userId !== previousArg?.userId || currentArg?.page !== previousArg?.page,
+
       async onCacheEntryAdded({ userId }, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
         try {
           await cacheDataLoaded;
           const socket = getSocket();
 
           const handler = (message: Message) => {
-            if (message.sender.id === userId || message.receiver.id === userId) {
+            console.log('handler', message);
+            if ([message.sender.id, message.receiver.id].includes(userId)) {
+              console.log('if');
+
               updateCachedData((draft) => {
-                // чтобы не дублировать
-                if (!draft.messages.find((m) => m.id === message.id)) {
+                if (!draft.messages.some((m) => m.id === message.id)) {
                   draft.messages.push(message);
                 }
               });
+
+              console.log('updated');
             }
+          };
+
+          socket.on('new_message', handler);
+          await cacheEntryRemoved;
+          socket.off('new_message', handler);
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      providesTags: (_, __, { userId }) => [{ type: 'Conversation', id: userId }],
+    }),
+
+    getDialogs: build.query<
+      {
+        dialogs: Dialog[];
+        pagination: { total: number; page: number; limit: number; totalPages: number };
+      },
+      { page?: number; limit?: number }
+    >({
+      query: ({ page = 1, limit = 20 }) => ({
+        url: '/messages/dialogs',
+        method: 'POST',
+        body: { page, limit },
+      }),
+
+      // ключ кэша: только страница и лимит
+      serializeQueryArgs: ({ queryArgs }) => {
+        return `dialogs-${queryArgs.page || 1}-${queryArgs.limit || 20}`;
+      },
+
+      merge: (currentCache, newCache, { arg }) => {
+        if (!currentCache) {
+          return newCache;
+        }
+
+        if (arg?.page === 1) {
+          currentCache.dialogs = newCache.dialogs.reverse();
+        } else {
+          currentCache.dialogs.push(...newCache.dialogs);
+        }
+
+        currentCache.pagination = newCache.pagination;
+      },
+
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.page !== previousArg?.page || currentArg?.limit !== previousArg?.limit;
+      },
+
+      async onCacheEntryAdded(_arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+        try {
+          await cacheDataLoaded;
+          const socket = getSocket();
+
+          const handler = (dialog: Dialog) => {
+            updateCachedData((draft) => {
+              draft.dialogs.unshift(dialog); // новые диалоги сверху
+            });
           };
 
           socket.on('new_message', handler);
 
           await cacheEntryRemoved;
           socket.off('new_message', handler);
-        } catch {}
+        } catch (e) {
+          console.error(e);
+        }
       },
-      providesTags: (result, error, { userId }) => [{ type: 'Conversation', id: userId }],
+
+      providesTags: () => [{ type: 'Dialogs', id: 'LIST' }],
     }),
 
     // Отправка сообщения через сокет
@@ -84,25 +143,6 @@ export const messagesApi = createApi({
         }
       },
       invalidatesTags: (result, error, { receiverId }) => [{ type: 'Conversation', id: receiverId }],
-    }),
-
-    // Получение списка диалогов через сокет
-    getDialogs: build.query<Dialog[], void>({
-      queryFn: async () => ({ data: [] }), // изначально пустой массив
-      async onCacheEntryAdded(_, { updateCachedData, cacheEntryRemoved }) {
-        const socket = getSocket();
-
-        const handleDialogs = (dialogs: Dialog[]) => {
-          updateCachedData(() => dialogs);
-        };
-
-        socket.emit('getDialogs');
-        socket.on('dialogsList', handleDialogs);
-
-        await cacheEntryRemoved;
-        socket.off('dialogsList', handleDialogs);
-      },
-      providesTags: [{ type: 'Dialogs', id: 'LIST' }],
     }),
   }),
 });

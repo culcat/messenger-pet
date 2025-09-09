@@ -1,4 +1,5 @@
 import ActionButton from '@assets/_Action button.svg?react';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { Avatar, Button, Divider, Input, Space, Spin } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import clsx from 'clsx';
@@ -20,37 +21,28 @@ const ChatDetail: FC = () => {
   const currentUser = Cookies.get('username');
 
   const [page, setPage] = useState(1);
-  const [allMessages, setAllMessages] = useState<Message[]>([]);
-  const [hasMore, setHasMore] = useState(true);
   const [newMessage, setNewMessage] = useState('');
-
   const limit = 20;
   const isMobile = useMediaQuery({ maxWidth: 600 });
 
   const {
     data: conversationData,
     isLoading,
-    isFetching,
     isError,
-  } = useGetConversationRestQuery(
-    { userId: Number(userId), limit, page },
-    { skip: !userId, refetchOnMountOrArgChange: true },
-  );
+  } = useGetConversationRestQuery(userId ? { userId, limit, page } : skipToken, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
   const [sendMessage] = useSendMessageMutation();
 
   useEffect(() => {
-    if (!conversationData) return;
-
-    setAllMessages(conversationData.messages); // просто берем из кеша
-    setHasMore(page < conversationData.pagination.totalPages);
-  }, [conversationData]);
-
-  useEffect(() => {
-    setPage(1);
-    setAllMessages([]);
+    if (conversationData?.pagination.totalPages) {
+      setPage(conversationData.pagination.totalPages);
+    }
     setNewMessage('');
-  }, [id]);
+  }, [id, conversationData?.pagination.totalPages]);
 
   const handleSend = async () => {
     if (!newMessage.trim() || !userId) return;
@@ -59,37 +51,37 @@ const ChatDetail: FC = () => {
     setNewMessage('');
   };
 
-  const loadMore = () => {
-    if (!isFetching && hasMore) setPage((prev) => prev + 1);
-  };
-
   if (!id) return <MessengerAbout />;
   if (userId === null || isNaN(userId)) return <div>Неверный ID чата</div>;
   if (isLoading && page === 1) return <Spin size="large" />;
   if (isError) return <div>Ошибка при загрузке сообщений</div>;
 
   return (
-    <div key={id} className={styles.chatLayout}>
+    <div className={styles.chatLayout}>
       <div className={styles.chatWrapper}>
         <Divider className={styles.divider} />
 
         <div className={styles.messagesLayout}>
-          {isFetching && page > 1 && (
-            <div className={styles.loadingIndicator}>
-              <Spin size="small" />
-            </div>
-          )}
           <Virtuoso
-            style={{ height: '100%' }}
-            data={allMessages}
-            firstItemIndex={0}
-            initialTopMostItemIndex={allMessages.length - 1}
-            startReached={loadMore}
-            itemContent={(index, item) => {
+            data={conversationData?.messages ?? []}
+            startReached={() => {
+              if (!conversationData) return;
+              if (page > 1) {
+                setPage((prev) => prev - 1);
+              }
+            }}
+            overscan={200}
+            followOutput="auto"
+            initialTopMostItemIndex={(conversationData?.messages?.length ?? 1) - 1}
+            itemContent={(index, item: Message) => {
               const isCurrentUser = item.sender.username === currentUser;
               return (
                 <div
-                  className={clsx(styles.messageRow, { [styles.right]: isCurrentUser, [styles.left]: !isCurrentUser })}
+                  key={item.id}
+                  className={clsx(styles.messageRow, {
+                    [styles.right]: isCurrentUser,
+                    [styles.left]: !isCurrentUser,
+                  })}
                 >
                   {!isCurrentUser && <Avatar>{item.sender.username[0]}</Avatar>}
                   <div

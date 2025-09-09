@@ -3,9 +3,9 @@ import { Avatar, Button, Divider, Input, List, Typography } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 import { useGetDialogsQuery } from '@/store/messagesApi';
 import type { Dialog } from '@/types/messages';
@@ -19,15 +19,21 @@ const Chats: FC = () => {
   const [searchText, setSearchText] = useState('');
   const [isCollapsed, setCollapsed] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 600 });
-  const { data: dialogs, isLoading, isError } = useGetDialogsQuery();
-  const dialogsArray = dialogs ?? []; // dialogs — уже массив  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error</div>;
-  if (!dialogs) return <div>Not Found</div>;
-  const currentUser = Cookies.get('username');
 
-  const toggleCollapse = () => {
-    setCollapsed(!isCollapsed);
-  };
+  const limit = 20;
+  const page = 1;
+
+  const { data, isLoading, isError } = useGetDialogsQuery({ limit, page }, { refetchOnMountOrArgChange: true });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading dialogs</div>;
+  if (!data) return <div>No dialogs found</div>;
+  console.log(data);
+
+  const dialogsArray = data ?? [];
+  const currentUser = Cookies.get('username') || '';
+
+  const toggleCollapse = () => setCollapsed(!isCollapsed);
 
   return (
     <div className={styles.wrapper}>
@@ -51,6 +57,7 @@ const Chats: FC = () => {
           </div>
 
           <Divider />
+
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
               <Text strong>Chat</Text>
@@ -61,40 +68,38 @@ const Chats: FC = () => {
                 className={styles.collapseButton}
               />
             </div>
+
             {isCollapsed && (
               <List
                 itemLayout="horizontal"
                 dataSource={dialogsArray}
-                renderItem={(item) => (
-                  <Link
-                    to={`/chat/${item.sender.username !== currentUser ? item.sender.id : item.receiver.id}`}
-                    className={styles.chatLink}
-                    key={item.id}
-                  >
-                    <List.Item
-                      className={clsx(styles.chatItem, {
-                        [styles.active]:
-                          selectedId === (item.sender.username !== currentUser ? item.sender.id : item.receiver.id),
-                      })}
-                      onClick={() =>
-                        setSelectedId(item.sender.username !== currentUser ? item.sender.id : item.receiver.id)
-                      }
-                    >
-                      <List.Item.Meta
-                        avatar={<Avatar>{item.sender.username[0]}</Avatar>}
-                        title={item.sender.username !== currentUser ? item.sender.username : item.receiver.username}
-                        description={item.text}
-                      />
-                      {/* {item.folder && <Paragraph className={styles.folderLabel}>{item.folder}</Paragraph>} */}
-                    </List.Item>
-                  </Link>
-                )}
+                renderItem={(item) => {
+                  const companionId = item.sender.username !== currentUser ? item.sender.id : item.receiver.id;
+                  const companionName =
+                    item.sender.username !== currentUser ? item.sender.username : item.receiver.username;
+
+                  return (
+                    <Link to={`/chat/${companionId}`} className={styles.chatLink}>
+                      <List.Item
+                        className={clsx(styles.chatItem, { [styles.active]: selectedId === companionId })}
+                        onClick={() => setSelectedId(companionId)}
+                      >
+                        <List.Item.Meta
+                          avatar={<Avatar>{companionName[0]}</Avatar>}
+                          title={companionName}
+                          description={item.text}
+                        />
+                      </List.Item>
+                    </Link>
+                  );
+                }}
               />
             )}
           </div>
         </div>
       )}
-      {(!isMobile && <Outlet />) || (isMobile && selectedId && <Outlet />)}
+
+      {(!isMobile || selectedId) && <Outlet />}
     </div>
   );
 };
